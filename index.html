@@ -62,7 +62,9 @@ section{scroll-margin-top:120px;margin-top:2.4rem}
 .card h3{margin:.7rem 0 .35rem;font-size:16px;font-weight:600;line-height:1.25}
 .card p{margin:0 0 .8rem;color:var(--muted);font-family:Roboto,sans-serif;font-size:12px;line-height:1.45}
 .meta{margin-top:auto;padding-top:.7rem;border-top:1px solid rgba(65,116,131,.10);font-family:Roboto,sans-serif;font-size:10px;color:var(--muted)}
-.footer{background:var(--deep);color:rgba(255,255,255,.72)}
+.footer{position:relative;overflow:hidden;isolation:isolate;min-height:64px;background:var(--deep);color:rgba(255,255,255,.72)}
+.footer-inner{position:relative;z-index:1}
+.footer-graphic{position:absolute;right:-18px;top:50%;width:min(190px,38vw);height:auto;z-index:0;transform:translateY(-50%);pointer-events:none;user-select:none}
 .footer-inner{max-width:1440px;margin:auto;padding:1rem 1.8rem;display:flex;justify-content:space-between;gap:1rem;font:10px/1.4 Roboto,sans-serif;letter-spacing:.03em}
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.header-inner,.nav-inner,.shell,.footer-inner{padding-left:1.25rem;padding-right:1.25rem}}
 @media(max-width:600px){.header-inner{padding:.7rem 1rem}.logo{height:32px}.title{font-size:18px}.subtitle{display:none}.nav{top:56px}.nav-inner,.shell,.footer-inner{padding-left:1rem;padding-right:1rem}.shell{padding-top:1.4rem}.grid{grid-template-columns:1fr}.footer-inner{flex-direction:column}.card{min-height:135px}}
@@ -181,7 +183,7 @@ section{scroll-margin-top:120px;margin-top:2.4rem}
   </section>
 </main>
 
-<footer class="footer"><div class="footer-inner"><span>Dolomiti NordicSki · DNS Digital Platform</span><span data-i18n="footer">Temporärer Hub · interne Arbeitsumgebung</span></div></footer>
+<footer class="footer" data-dns-tool-footer><img class="footer-graphic" src="https://dolomitinordicski.github.io/dns-shared-data/graphics/swoosh.svg" alt="" aria-hidden="true"><div class="footer-inner"><span>Dolomiti NordicSki · DNS Digital Platform</span><span data-i18n="footer">Temporärer Hub · interne Arbeitsumgebung</span></div></footer>
 
 <script>
 const copy={
