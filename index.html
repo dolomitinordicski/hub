@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0D4D5E">
-<title>DNS Hub · System Map</title>
+<title>DNS Hub · Control Board</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -56,18 +56,20 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 .legend span{display:inline-flex;align-items:center;gap:.3rem}
 .legend i{display:inline-block;width:8px;height:8px;border-radius:50%}
 .legend .active{background:var(--positive)}.legend .pending{background:var(--warning)}.legend .offline{background:var(--negative)}.legend .na{background:var(--unknown)}
-.graph-wrap{position:relative;background:rgba(255,255,255,.55);border:1px solid var(--subtle);border-radius:14px;padding:1.15rem;overflow:hidden}
-.graph{position:relative;z-index:2;display:grid;gap:1rem}
-.group{position:relative}
-.group-head{display:flex;align-items:center;gap:.65rem;margin:.15rem 0 .55rem}
-.group-head h2{margin:0;color:var(--mid);font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
-.group-head:after{content:"";height:1px;background:var(--border);flex:1}
+.board{display:grid;gap:1rem}
+.graph{display:grid;gap:1rem}
+.group{padding:1rem;border:1px solid var(--subtle);border-radius:12px;background:rgba(255,255,255,.62)}
+.group-head{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:.75rem;margin:0 0 .75rem}
+.group-head h2{margin:0;color:var(--deep);font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.group-head:after{content:"";height:1px;background:var(--border)}
 .tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
-.group[data-group="platform"] .tool-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-width:960px;margin:0 auto}
-.tool-card{position:relative;display:flex;min-height:168px;flex-direction:column;padding:.95rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);color:inherit;text-decoration:none;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;outline:none}
-.tool-card:hover,.tool-card:focus-visible{transform:translateY(-2px);border-color:var(--light);box-shadow:0 8px 22px rgba(13,77,94,.10)}
-.tool-card.is-dimmed{opacity:.2;pointer-events:none}
-.tool-card.is-focus{border-color:var(--mid);box-shadow:0 8px 24px rgba(13,77,94,.12)}
+.group[data-group="platform"] .tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+.tool-card{position:relative;display:flex;min-height:214px;flex-direction:column;padding:.95rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);color:inherit;text-decoration:none;transition:border-color .16s ease,box-shadow .16s ease,opacity .16s ease;outline:none}
+.tool-card:hover,.tool-card:focus-visible{border-color:var(--mid);box-shadow:0 6px 18px rgba(13,77,94,.09)}
+.tool-card.is-filtered{display:none}
+.tool-card.is-focus{border-color:var(--deep);box-shadow:0 0 0 2px rgba(13,77,94,.08)}
+.tool-card.is-related{border-color:var(--light);background:#FBFEFE}
+.tool-card.is-unrelated{opacity:.28}
 .tool-top{display:flex;justify-content:space-between;gap:.65rem;align-items:flex-start}
 .tool-name{font-size:15px;font-weight:650;line-height:1.25}
 .badges{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem}
@@ -75,31 +77,56 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 .badge.lifecycle-development,.badge.lifecycle-beta{background:#FFF5DB;color:#8C6500}
 .badge.lifecycle-maintenance,.badge.lifecycle-legacy{background:#F1F1F1;color:#667277}
 .badge.update{background:#FFF0E8;color:#93451F}
-.health{display:flex;align-items:center;gap:.38rem;margin-top:.7rem;font:700 10px Roboto,sans-serif;color:var(--muted)}
-.health-dot{width:9px;height:9px;border-radius:50%;background:var(--unknown);box-shadow:0 0 0 3px rgba(138,152,157,.12)}
-.health[data-state="active"] .health-dot{background:var(--positive);box-shadow:0 0 0 3px rgba(15,110,86,.10)}
-.health[data-state="pending"] .health-dot{background:var(--warning);box-shadow:0 0 0 3px rgba(183,123,0,.10)}
-.health[data-state="offline"] .health-dot{background:var(--negative);box-shadow:0 0 0 3px rgba(153,60,29,.10)}
-.backend{margin-top:.3rem;color:var(--muted);font:9px/1.3 Roboto,sans-serif}
-.versions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.35rem;margin-top:auto;padding-top:.75rem;border-top:1px solid var(--subtle)}
+.tool-description{min-height:34px;margin-top:.55rem;color:var(--muted);font:10.5px/1.45 Roboto,sans-serif}
+.status-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem;margin-top:.72rem}
+.status-item{min-width:0;padding:.4rem .45rem;border-radius:6px;background:#F7FAFA}
+.status-label{display:block;color:var(--muted);font:700 7.5px/1.2 Roboto,sans-serif;letter-spacing:.055em;text-transform:uppercase}
+.status-value{display:flex;align-items:center;gap:.3rem;margin-top:.22rem;overflow:hidden;color:var(--deep);font:700 9px/1.2 Roboto,sans-serif;white-space:nowrap;text-overflow:ellipsis}
+.status-dot{flex:0 0 auto;width:7px;height:7px;border-radius:50%;background:var(--unknown)}
+.status-item[data-state="active"] .status-dot{background:var(--positive)}
+.status-item[data-state="pending"] .status-dot{background:var(--warning)}
+.status-item[data-state="offline"] .status-dot{background:var(--negative)}
+.status-item[data-state="na"] .status-dot{background:var(--unknown)}
+.backend{margin-top:.42rem;color:var(--muted);font:9px/1.3 Roboto,sans-serif}
+.dependencies{margin-top:.65rem;padding-top:.6rem;border-top:1px solid var(--subtle)}
+.dependencies-label{color:var(--muted);font:700 8px/1.2 Roboto,sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.dependency-chips{display:flex;flex-wrap:wrap;gap:.28rem;margin-top:.36rem}
+.dependency-chip{display:inline-flex;align-items:center;padding:.22rem .38rem;border:1px solid var(--border);border-radius:5px;background:#fff;color:var(--mid);font:700 8px/1.2 Roboto,sans-serif}
+.dependency-chip.none{font-weight:400;color:var(--unknown)}
+.versions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.35rem;margin-top:auto;padding-top:.75rem}
 .version{min-width:0;padding:.38rem .42rem;border-radius:6px;background:#F7FAFA}
 .version-key{display:block;color:var(--muted);font:700 8px Roboto,sans-serif;letter-spacing:.04em}
 .version-value{display:block;overflow:hidden;text-overflow:ellipsis;color:var(--deep);font:700 10px Roboto,sans-serif;white-space:nowrap}
 .version[data-state="update-available"]{background:#FFF5DB}.version[data-state="update-available"] .version-value{color:#8C6500}
 .version[data-state="unknown"] .version-value,.version[data-state="na"] .version-value{color:var(--unknown)}
-.tooltip{position:absolute;left:12px;right:12px;bottom:calc(100% + 8px);z-index:20;display:none;padding:.65rem .75rem;border-radius:8px;background:var(--deep);color:#fff;box-shadow:0 8px 24px rgba(13,77,94,.2);font:11px/1.45 Roboto,sans-serif}
-.tooltip:after{content:"";position:absolute;bottom:-6px;left:28px;border-width:6px 6px 0;border-style:solid;border-color:var(--deep) transparent transparent}
-.tool-card:hover .tooltip,.tool-card:focus-visible .tooltip{display:block}
-.edges{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:visible}
-.edge{fill:none;stroke:var(--unknown);stroke-width:1.7;opacity:.28;transition:opacity .15s ease,stroke-width .15s ease}
-.edge[data-state="active"]{stroke:var(--positive)}.edge[data-state="pending"]{stroke:var(--warning)}.edge[data-state="offline"]{stroke:var(--negative)}
-.edge.is-highlighted{opacity:.88;stroke-width:2.5}
+.registry-panel{margin-top:1.25rem;border:1px solid var(--subtle);border-radius:12px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
+.registry-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;padding:1rem 1rem .85rem;border-bottom:1px solid var(--subtle)}
+.registry-head h2{margin:0;font-size:15px;font-weight:650}
+.registry-head p{margin:.25rem 0 0;color:var(--muted);font:10.5px/1.4 Roboto,sans-serif}
+.registry-scroll{overflow-x:auto}
+.registry-table{width:100%;border-collapse:collapse;min-width:930px}
+.registry-table th,.registry-table td{padding:.58rem .72rem;border-bottom:1px solid var(--subtle);text-align:left;vertical-align:middle}
+.registry-table th{background:#F8FBFB;color:var(--mid);font:700 8px/1.2 Roboto,sans-serif;letter-spacing:.055em;text-transform:uppercase}
+.registry-table td{font:10px/1.35 Roboto,sans-serif}
+.registry-table tr:last-child td{border-bottom:0}
+.registry-table tr.is-filtered{display:none}
+.registry-table tr.is-related{background:#F7FBFB}
+.registry-table tr.is-unrelated{opacity:.32}
+.registry-tool{font-family:"Be Vietnam Pro",sans-serif;font-weight:600;color:var(--deep);text-decoration:none}
+.registry-tool:hover{text-decoration:underline}
+.table-state{display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap}
+.table-state .status-dot{width:7px;height:7px}
+.table-state[data-state="active"] .status-dot{background:var(--positive)}
+.table-state[data-state="pending"] .status-dot{background:var(--warning)}
+.table-state[data-state="offline"] .status-dot{background:var(--negative)}
+.table-state[data-state="na"] .status-dot{background:var(--unknown)}
 .empty{padding:2rem;text-align:center;color:var(--muted);font:12px Roboto,sans-serif}
 .footer{position:relative;overflow:hidden;margin-top:2rem;background:var(--deep);color:rgba(255,255,255,.72)}
 .footer-inner{max-width:1440px;margin:auto;padding:1rem 1.8rem;display:flex;justify-content:space-between;gap:1rem;font:10px/1.4 Roboto,sans-serif}
 .footer-graphic{position:absolute;right:-18px;top:50%;width:min(190px,38vw);transform:translateY(-50%);opacity:.8}
-@media(max-width:1050px){.tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:760px){.header-inner,.shell,.footer-inner{padding-left:1rem;padding-right:1rem}.logo{height:32px}.subtitle,.live-source{display:none}.hero{grid-template-columns:1fr}.canonical{min-width:0}.tool-grid,.group[data-group="platform"] .tool-grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.edges{display:none}.tool-card{min-height:150px}.tooltip{position:static;display:block;margin-top:.55rem;background:transparent;color:var(--muted);box-shadow:none;padding:0}.tooltip:after{display:none}.footer-inner{flex-direction:column}}
+@media(max-width:1120px){.tool-grid,.group[data-group="platform"] .tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:820px){.tool-grid,.group[data-group="platform"] .tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.header-inner,.shell,.footer-inner{padding-left:1rem;padding-right:1rem}.logo{height:32px}.subtitle,.live-source{display:none}.hero{grid-template-columns:1fr}.canonical{min-width:0}.tool-grid,.group[data-group="platform"] .tool-grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.tool-card{min-height:0}.registry-head{align-items:flex-start;flex-direction:column}.footer-inner{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
@@ -110,7 +137,7 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
       <img class="logo" src="logo.png" alt="Dolomiti NordicSki">
       <div>
         <div class="title"><strong>DNS</strong> <span>HUB</span></div>
-        <div class="subtitle" data-i18n="subtitle">SYSTEM MAP & TOOL STATUS</div>
+        <div class="subtitle" data-i18n="subtitle">SYSTEM CONTROL BOARD</div>
       </div>
     </div>
     <div class="header-actions">
@@ -162,9 +189,35 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
     </div>
   </div>
 
-  <section class="graph-wrap" id="graphWrap">
-    <svg class="edges" id="edges" aria-hidden="true"></svg>
+  <section class="board" id="board" aria-label="DNS System Layers">
     <div class="graph" id="graph"></div>
+  </section>
+
+  <section class="registry-panel" aria-labelledby="registryTitle">
+    <div class="registry-head">
+      <div>
+        <h2 id="registryTitle" data-i18n="registryTitle">System Registry</h2>
+        <p data-i18n="registryIntro">Versionen und Laufzeitstatus aller DNS Tools in einer kontrollierbaren Ansicht.</p>
+      </div>
+    </div>
+    <div class="registry-scroll">
+      <table class="registry-table">
+        <thead>
+          <tr>
+            <th>Tool</th>
+            <th>App</th>
+            <th>F</th>
+            <th>DS</th>
+            <th>SD</th>
+            <th>Web</th>
+            <th>Firebase</th>
+            <th data-i18n="lifecycleColumn">Status</th>
+            <th>Update</th>
+          </tr>
+        </thead>
+        <tbody id="registryBody"></tbody>
+      </table>
+    </div>
   </section>
 </main>
 
@@ -202,9 +255,9 @@ const db=getFirestore(app);
 
 const copy={
   de:{
-    subtitle:'SYSTEM MAP & TOOL STATUS',
+    subtitle:'SYSTEM CONTROL BOARD',
     headline:'Systemübersicht auf einen Blick.',
-    intro:'Tools, Abhängigkeiten, Entwicklungsstatus, Backend-Verbindungen und Foundation-Versionen in einer gemeinsamen operativen Ansicht.',
+    intro:'Tools, Abhängigkeiten, Laufzeitstatus sowie App- und Plattformversionen in einer klaren operativen Struktur.',
     canonical:'Aktueller Standard',tools:'Tools',active:'Active',updates:'Updates nötig',issues:'Offline',
     filterAll:'Alle',filterUpdates:'Updates',filterIssues:'Probleme',filterDevelopment:'In Entwicklung',
     legendActive:'Active',legendPending:'Pending',legendOffline:'Offline',
@@ -215,12 +268,12 @@ const copy={
     lifecycle:{production:'Production',beta:'Beta',development:'Development',planned:'Planned',maintenance:'Maintenance',legacy:'Legacy'},
     health:{active:'Active',pending:'Pending',offline:'Offline',na:'N/A'},
     version:{app:'APP',foundation:'F',designSystem:'DS',sharedData:'SD'},
-    current:'aktuell',to:'→'
+    dependencies:'Abhängigkeiten',noDependencies:'Keine',registryTitle:'System Registry',registryIntro:'Versionen und Laufzeitstatus aller DNS Tools in einer kontrollierbaren Ansicht.',lifecycleColumn:'Status',current:'aktuell',to:'→'
   },
   it:{
     subtitle:'SYSTEM MAP & TOOL STATUS',
     headline:'Panoramica del sistema a colpo d’occhio.',
-    intro:'Tool, dipendenze, stato di sviluppo, connessioni backend e versioni app/piattaforma in un’unica vista operativa.',
+    intro:'Tool, dipendenze, stato operativo e versioni app/piattaforma in una struttura chiara e controllabile.',
     canonical:'Standard attuale',tools:'Tool',active:'Attivi',updates:'Aggiornamenti',issues:'Offline',
     filterAll:'Tutti',filterUpdates:'Aggiornamenti',filterIssues:'Problemi',filterDevelopment:'In sviluppo',
     legendActive:'Attivo',legendPending:'In attesa',legendOffline:'Offline',
@@ -231,7 +284,7 @@ const copy={
     lifecycle:{production:'Production',beta:'Beta',development:'Development',planned:'Planned',maintenance:'Maintenance',legacy:'Legacy'},
     health:{active:'Attivo',pending:'In attesa',offline:'Offline',na:'N/A'},
     version:{app:'APP',foundation:'F',designSystem:'DS',sharedData:'SD'},
-    current:'attuale',to:'→'
+    dependencies:'Dipendenze',noDependencies:'Nessuna',registryTitle:'System Registry',registryIntro:'Versioni e stato operativo di tutti i tool DNS in una vista controllabile.',lifecycleColumn:'Stato',current:'attuale',to:'→'
   }
 };
 
@@ -339,33 +392,79 @@ document.querySelectorAll('[data-lang]').forEach(btn=>btn.addEventListener('clic
 
 function stateLabel(state){return copy[lang].health[state]||state||'—'}
 function lifecycleLabel(state){return copy[lang].lifecycle[state]||state||'—'}
+function toolLabel(id){return tools.find(tool=>tool.id===id)?.shortLabel||tools.find(tool=>tool.id===id)?.label||id}
 function versionBlock(key,label,tool){
   const versions=tool.versions||{};
   const state=versions.state?.[key]||(key==='app'&&versions.app?'reported':'unknown');
   const current=versions[key];
   const latest=versions.canonical?.[key]?.version||canonical?.[key]?.version||null;
-  const value=current|| (state==='na'?'N/A':'—');
+  const value=current||(state==='na'?'N/A':'—');
   const suffix=state==='update-available'&&latest?(' '+copy[lang].to+' '+latest):'';
   return '<div class="version" data-state="'+state+'" title="'+label+' '+value+(latest?' · '+copy[lang].current+' '+latest:'')+'"><span class="version-key">'+label+'</span><span class="version-value">'+value+suffix+'</span></div>';
 }
+function foundationRuntimeState(tool){
+  const state=tool.versions?.state?.foundation;
+  if(state==='up-to-date')return 'active';
+  if(state==='update-available'||state==='ahead')return 'pending';
+  if(state==='na')return 'na';
+  return 'na';
+}
+function statusItem(label,state){
+  const normalized=['active','pending','offline','na'].includes(state)?state:'na';
+  return '<div class="status-item" data-state="'+normalized+'"><span class="status-label">'+label+'</span><span class="status-value"><span class="status-dot"></span>'+stateLabel(normalized)+'</span></div>';
+}
+function dependencyBlock(tool){
+  const deps=tool.dependencies||[];
+  const content=deps.length
+    ? deps.map(id=>'<span class="dependency-chip">'+toolLabel(id)+'</span>').join('')
+    : '<span class="dependency-chip none">'+copy[lang].noDependencies+'</span>';
+  return '<div class="dependencies"><div class="dependencies-label">'+copy[lang].dependencies+'</div><div class="dependency-chips">'+content+'</div></div>';
+}
 function card(tool){
-  const health=tool.health?.connectivity||'pending';
+  const web=tool.health?.web?.state||tool.health?.connectivity||'pending';
+  const firebase=tool.health?.firebase?.state||'na';
   const description=tool.description?.[lang]||tool.description?.de||'';
   const update=tool.versions?.updateRequired;
   const body='<div class="tool-top"><div class="tool-name">'+tool.label+'</div><div class="badges"><span class="badge lifecycle-'+tool.lifecycle+'">'+lifecycleLabel(tool.lifecycle)+'</span>'+(update?'<span class="badge update">UPDATE</span>':'')+'</div></div>'+
-    '<div class="health" data-state="'+health+'"><span class="health-dot"></span><span>'+stateLabel(health)+'</span></div>'+
+    '<div class="tool-description">'+description+'</div>'+
+    '<div class="status-strip">'+
+      statusItem('WEB',web)+
+      statusItem('FIREBASE',firebase)+
+      statusItem('FOUNDATION',foundationRuntimeState(tool))+
+    '</div>'+
     '<div class="backend">'+(tool.backend?.label||'—')+'</div>'+
+    dependencyBlock(tool)+
     '<div class="versions">'+
       versionBlock('app',copy[lang].version.app,tool)+
       versionBlock('foundation',copy[lang].version.foundation,tool)+
       versionBlock('designSystem',copy[lang].version.designSystem,tool)+
       versionBlock('sharedData',copy[lang].version.sharedData,tool)+
-    '</div>'+
-    '<div class="tooltip">'+description+'</div>';
-  const attrs='class="tool-card" data-tool-id="'+tool.id+'" data-health="'+health+'" data-lifecycle="'+tool.lifecycle+'" data-update="'+String(Boolean(update))+'"';
+    '</div>';
+  const attrs='class="tool-card" data-tool-id="'+tool.id+'" data-health="'+(tool.health?.connectivity||'pending')+'" data-lifecycle="'+tool.lifecycle+'" data-update="'+String(Boolean(update))+'"';
   return tool.url
     ? '<a '+attrs+' href="'+tool.url+'" target="_blank" rel="noopener">'+body+'</a>'
     : '<div '+attrs+' tabindex="0">'+body+'</div>';
+}
+function tableState(state){
+  const normalized=['active','pending','offline','na'].includes(state)?state:'na';
+  return '<span class="table-state" data-state="'+normalized+'"><span class="status-dot"></span>'+stateLabel(normalized)+'</span>';
+}
+function registryRow(tool){
+  const v=tool.versions||{};
+  const web=tool.health?.web?.state||tool.health?.connectivity||'pending';
+  const firebase=tool.health?.firebase?.state||'na';
+  const link=tool.url?'<a class="registry-tool" href="'+tool.url+'" target="_blank" rel="noopener">'+tool.label+'</a>':'<span class="registry-tool">'+tool.label+'</span>';
+  return '<tr data-registry-id="'+tool.id+'">'+
+    '<td>'+link+'</td>'+
+    '<td>'+(v.app||'—')+'</td>'+
+    '<td>'+(v.foundation||'—')+'</td>'+
+    '<td>'+(v.designSystem||'—')+'</td>'+
+    '<td>'+(v.sharedData||'—')+'</td>'+
+    '<td>'+tableState(web)+'</td>'+
+    '<td>'+tableState(firebase)+'</td>'+
+    '<td>'+lifecycleLabel(tool.lifecycle)+'</td>'+
+    '<td>'+(v.updateRequired?'<span class="badge update">UPDATE</span>':'—')+'</td>'+
+  '</tr>';
 }
 function matchesFilter(tool){
   if(activeFilter==='updates')return Boolean(tool.versions?.updateRequired);
@@ -398,67 +497,68 @@ function render(){
     if(!rows.length)return '';
     return '<section class="group" data-group="'+group+'"><div class="group-head"><h2>'+c.groups[group]+'</h2></div><div class="tool-grid">'+rows.map(card).join('')+'</div></section>';
   }).join('');
+  document.getElementById('registryBody').innerHTML=visible.slice().sort((a,b)=>(a.order||0)-(b.order||0)).map(registryRow).join('');
   applyFilter();
-  requestAnimationFrame(drawEdges);
-  bindCards();
+  bindRelations();
 }
 function applyFilter(){
   tools.forEach(tool=>{
-    const el=document.querySelector('[data-tool-id="'+tool.id+'"]');
-    if(el)el.classList.toggle('is-dimmed',!matchesFilter(tool));
+    const show=matchesFilter(tool);
+    const cardEl=document.querySelector('[data-tool-id="'+tool.id+'"]');
+    const rowEl=document.querySelector('[data-registry-id="'+tool.id+'"]');
+    if(cardEl)cardEl.classList.toggle('is-filtered',!show);
+    if(rowEl)rowEl.classList.toggle('is-filtered',!show);
+  });
+  document.querySelectorAll('.group').forEach(group=>{
+    const hasVisible=[...group.querySelectorAll('.tool-card')].some(card=>!card.classList.contains('is-filtered'));
+    group.style.display=hasVisible?'':'none';
   });
 }
 document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{
   activeFilter=btn.dataset.filter;
   document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
+  clearRelations();
   applyFilter();
-  drawEdges();
 }));
-
-function drawEdges(){
-  const wrap=document.getElementById('graphWrap');
-  const svg=document.getElementById('edges');
-  const rect=wrap.getBoundingClientRect();
-  svg.setAttribute('viewBox','0 0 '+rect.width+' '+rect.height);
-  svg.setAttribute('width',rect.width);
-  svg.setAttribute('height',rect.height);
-  svg.innerHTML='';
-  for(const tool of tools){
-    const target=document.querySelector('[data-tool-id="'+tool.id+'"]');
-    if(!target||target.classList.contains('is-dimmed'))continue;
-    for(const dependency of tool.dependencies||[]){
-      const source=document.querySelector('[data-tool-id="'+dependency+'"]');
-      if(!source||source.classList.contains('is-dimmed'))continue;
-      const a=source.getBoundingClientRect(),b=target.getBoundingClientRect();
-      const x1=a.left+a.width/2-rect.left,y1=a.bottom-rect.top;
-      const x2=b.left+b.width/2-rect.left,y2=b.top-rect.top;
-      const mid=(y1+y2)/2;
-      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-      path.setAttribute('d','M '+x1+' '+y1+' C '+x1+' '+mid+', '+x2+' '+mid+', '+x2+' '+y2);
-      path.setAttribute('class','edge');
-      path.dataset.source=dependency;
-      path.dataset.target=tool.id;
-      path.dataset.state=tool.health?.connectivity||'pending';
-      svg.appendChild(path);
-    }
-  }
+function relationIds(id){
+  const selected=tools.find(tool=>tool.id===id);
+  const upstream=new Set(selected?.dependencies||[]);
+  const downstream=new Set(tools.filter(tool=>(tool.dependencies||[]).includes(id)).map(tool=>tool.id));
+  return {upstream,downstream,all:new Set([id,...upstream,...downstream])};
 }
-function bindCards(){
+function setRelations(id){
+  const relations=relationIds(id);
   document.querySelectorAll('.tool-card').forEach(el=>{
-    const id=el.dataset.toolId;
-    const toggle=on=>{
-      el.classList.toggle('is-focus',on);
-      document.querySelectorAll('.edge').forEach(edge=>{
-        edge.classList.toggle('is-highlighted',on&&(edge.dataset.target===id||edge.dataset.source===id));
-      });
-    };
-    el.addEventListener('mouseenter',()=>toggle(true));
-    el.addEventListener('mouseleave',()=>toggle(false));
-    el.addEventListener('focus',()=>toggle(true));
-    el.addEventListener('blur',()=>toggle(false));
+    const current=el.dataset.toolId;
+    const filtered=el.classList.contains('is-filtered');
+    el.classList.toggle('is-focus',current===id);
+    el.classList.toggle('is-related',!filtered&&current!==id&&relations.all.has(current));
+    el.classList.toggle('is-unrelated',!filtered&&!relations.all.has(current));
+  });
+  document.querySelectorAll('[data-registry-id]').forEach(row=>{
+    const current=row.dataset.registryId;
+    const filtered=row.classList.contains('is-filtered');
+    row.classList.toggle('is-related',!filtered&&relations.all.has(current));
+    row.classList.toggle('is-unrelated',!filtered&&!relations.all.has(current));
   });
 }
-addEventListener('resize',()=>requestAnimationFrame(drawEdges),{passive:true});
+function clearRelations(){
+  document.querySelectorAll('.is-focus,.is-related,.is-unrelated').forEach(el=>el.classList.remove('is-focus','is-related','is-unrelated'));
+}
+function bindRelations(){
+  document.querySelectorAll('.tool-card').forEach(el=>{
+    const id=el.dataset.toolId;
+    el.addEventListener('mouseenter',()=>setRelations(id));
+    el.addEventListener('mouseleave',clearRelations);
+    el.addEventListener('focus',()=>setRelations(id));
+    el.addEventListener('blur',clearRelations);
+  });
+  document.querySelectorAll('[data-registry-id]').forEach(row=>{
+    const id=row.dataset.registryId;
+    row.addEventListener('mouseenter',()=>setRelations(id));
+    row.addEventListener('mouseleave',clearRelations);
+  });
+}
 
 setLang(lang);
 loadRegistry();
