@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0D4D5E">
-<title>DNS Hub · Control Board</title>
+<title>DNS Hub · System Architecture</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
@@ -56,62 +56,65 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 .legend span{display:inline-flex;align-items:center;gap:.3rem}
 .legend i{display:inline-block;width:8px;height:8px;border-radius:50%}
 .legend .active{background:var(--positive)}.legend .pending{background:var(--warning)}.legend .offline{background:var(--negative)}.legend .na{background:var(--unknown)}
-.board{position:relative;display:grid;gap:1rem;padding:1rem;border:1px solid var(--subtle);border-radius:14px;background:rgba(255,255,255,.55);overflow:hidden}
-.graph{position:relative;z-index:2;display:grid;grid-template-columns:minmax(220px,.8fr) minmax(360px,1.35fr) minmax(260px,1fr);gap:1rem;align-items:start}
-.lane{display:grid;gap:.9rem;align-content:start;min-width:0}
-.lane-head{display:flex;align-items:center;gap:.55rem;color:var(--mid);font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
-.lane-head:after{content:"";height:1px;background:var(--border);flex:1}
-.group{padding:.78rem;border:1px solid var(--subtle);border-radius:10px;background:rgba(255,255,255,.72);min-width:0}
-.group-head{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:.65rem;margin:0 0 .62rem}
-.group-head h2{margin:0;color:var(--deep);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-.group-head:after{content:"";height:1px;background:var(--border)}
-.tool-grid{display:grid;grid-template-columns:1fr;gap:.62rem}
-.lane[data-lane="operations"] .tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-.system-edges{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:visible}
-.system-edge{fill:none;stroke:var(--unknown);stroke-width:1.35;opacity:.2;vector-effect:non-scaling-stroke;transition:opacity .15s ease,stroke-width .15s ease}
-.system-edge[data-state="active"]{stroke:var(--positive)}
-.system-edge[data-state="pending"]{stroke:var(--warning)}
-.system-edge[data-state="offline"]{stroke:var(--negative)}
-.system-edge.is-highlighted{opacity:.92;stroke-width:2.25}
-.tool-card{position:relative;display:flex;min-height:214px;flex-direction:column;padding:.95rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);color:inherit;text-decoration:none;transition:border-color .16s ease,box-shadow .16s ease,opacity .16s ease;outline:none}
-.tool-card:hover,.tool-card:focus-visible{border-color:var(--mid);box-shadow:0 6px 18px rgba(13,77,94,.09)}
+.architecture{display:grid;gap:.7rem;padding:1rem;border:1px solid var(--subtle);border-radius:14px;background:rgba(255,255,255,.58)}
+.control-plane{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;align-items:center;padding:.78rem .9rem;border:1px solid var(--border);border-radius:9px;background:#fff}
+.control-plane-main{display:flex;align-items:center;gap:.75rem;min-width:0}
+.control-plane-title{font-size:13px;font-weight:700;letter-spacing:.035em;text-transform:uppercase}
+.control-plane-meta{color:var(--muted);font:9px/1.4 Roboto,sans-serif}
+.control-plane-state{display:flex;align-items:center;gap:.45rem;color:var(--mid);font:700 9px/1.2 Roboto,sans-serif;white-space:nowrap}
+.backbone-link{justify-self:center;width:1px;height:16px;background:var(--border)}
+.backbone{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;align-items:center;padding:.82rem 1rem;border-radius:9px}
+.backbone.core{background:var(--deep);color:#fff}
+.backbone.foundation{border:1px solid var(--mid);background:#fff;color:var(--deep)}
+.backbone-label{font-size:13px;font-weight:700;letter-spacing:.025em}
+.backbone-description{margin-top:.18rem;color:inherit;opacity:.72;font:9.5px/1.35 Roboto,sans-serif}
+.backbone-meta{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.36rem}
+.backbone-token{display:inline-flex;align-items:center;gap:.3rem;padding:.3rem .45rem;border-radius:5px;background:rgba(255,255,255,.11);font:700 8.5px/1 Roboto,sans-serif}
+.foundation .backbone-token{background:#F4F8F9;color:var(--mid)}
+.ecosystem{display:grid;gap:.8rem;margin-top:.12rem}
+.ecosystem-section{display:grid;gap:.55rem}
+.ecosystem-head{display:flex;align-items:center;gap:.6rem;color:var(--mid);font-size:9px;font-weight:700;letter-spacing:.085em;text-transform:uppercase}
+.ecosystem-head:after{content:"";height:1px;background:var(--border);flex:1}
+.tool-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.55rem}
+.tool-card{position:relative;display:flex;min-height:112px;flex-direction:column;padding:.72rem .78rem;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow);color:inherit;text-decoration:none;outline:none;transition:border-color .14s ease,box-shadow .14s ease,opacity .14s ease}
+.tool-card:hover,.tool-card:focus-visible{border-color:var(--mid);box-shadow:0 4px 14px rgba(13,77,94,.09)}
 .tool-card.is-filtered{display:none}
 .tool-card.is-focus{border-color:var(--deep);box-shadow:0 0 0 2px rgba(13,77,94,.08)}
-.tool-card.is-related{border-color:var(--light);background:#FBFEFE}
-.tool-card.is-unrelated{opacity:.28}
-.tool-top{display:flex;justify-content:space-between;gap:.65rem;align-items:flex-start}
-.tool-name{font-size:15px;font-weight:650;line-height:1.25}
-.badges{display:flex;flex-direction:column;align-items:flex-end;gap:.3rem}
-.badge{display:inline-flex;align-items:center;border-radius:999px;padding:.25rem .48rem;font:700 8px/1 Roboto,sans-serif;letter-spacing:.055em;text-transform:uppercase;white-space:nowrap;background:#EDF3F4;color:var(--mid)}
+.tool-card.is-related{border-color:var(--light);background:#FAFDFD}
+.tool-card.is-unrelated{opacity:.26}
+.tool-top{display:flex;justify-content:space-between;gap:.5rem;align-items:flex-start}
+.tool-name{font-size:12px;font-weight:650;line-height:1.25}
+.badges{display:flex;flex-direction:column;align-items:flex-end;gap:.25rem}
+.badge{display:inline-flex;align-items:center;border-radius:999px;padding:.22rem .4rem;font:700 7px/1 Roboto,sans-serif;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap;background:#EDF3F4;color:var(--mid)}
 .badge.lifecycle-development,.badge.lifecycle-beta{background:#FFF5DB;color:#8C6500}
 .badge.lifecycle-maintenance,.badge.lifecycle-legacy{background:#F1F1F1;color:#667277}
 .badge.update{background:#FFF0E8;color:#93451F}
-.tool-description{min-height:34px;margin-top:.55rem;color:var(--muted);font:10.5px/1.45 Roboto,sans-serif}
-.status-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem;margin-top:.72rem}
-.status-item{min-width:0;padding:.4rem .45rem;border-radius:6px;background:#F7FAFA}
-.status-label{display:block;color:var(--muted);font:700 7.5px/1.2 Roboto,sans-serif;letter-spacing:.055em;text-transform:uppercase}
-.status-value{display:flex;align-items:center;gap:.3rem;margin-top:.22rem;overflow:hidden;color:var(--deep);font:700 9px/1.2 Roboto,sans-serif;white-space:nowrap;text-overflow:ellipsis}
+.app-version{margin-top:.38rem;color:var(--mid);font:700 9px/1.2 Roboto,sans-serif}
+.compact-status{display:flex;flex-wrap:wrap;gap:.55rem;margin-top:auto;padding-top:.62rem;color:var(--muted);font:700 7.5px/1.2 Roboto,sans-serif;text-transform:uppercase}
+.compact-status span{display:inline-flex;align-items:center;gap:.25rem}
 .status-dot{flex:0 0 auto;width:7px;height:7px;border-radius:50%;background:var(--unknown)}
-.status-item[data-state="active"] .status-dot{background:var(--positive)}
-.status-item[data-state="pending"] .status-dot{background:var(--warning)}
-.status-item[data-state="offline"] .status-dot{background:var(--negative)}
-.status-item[data-state="na"] .status-dot{background:var(--unknown)}
-.backend{margin-top:.42rem;color:var(--muted);font:9px/1.3 Roboto,sans-serif}
-.dependencies{display:none;margin-top:.65rem;padding-top:.6rem;border-top:1px solid var(--subtle)}
-.dependencies-label{color:var(--muted);font:700 8px/1.2 Roboto,sans-serif;letter-spacing:.05em;text-transform:uppercase}
-.dependency-chips{display:flex;flex-wrap:wrap;gap:.28rem;margin-top:.36rem}
-.dependency-chip{display:inline-flex;align-items:center;padding:.22rem .38rem;border:1px solid var(--border);border-radius:5px;background:#fff;color:var(--mid);font:700 8px/1.2 Roboto,sans-serif}
-.dependency-chip.none{font-weight:400;color:var(--unknown)}
-.versions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.35rem;margin-top:auto;padding-top:.75rem}
-.version{min-width:0;padding:.38rem .42rem;border-radius:6px;background:#F7FAFA}
-.version-key{display:block;color:var(--muted);font:700 8px Roboto,sans-serif;letter-spacing:.04em}
-.version-value{display:block;overflow:hidden;text-overflow:ellipsis;color:var(--deep);font:700 10px Roboto,sans-serif;white-space:nowrap}
-.version[data-state="update-available"]{background:#FFF5DB}.version[data-state="update-available"] .version-value{color:#8C6500}
-.version[data-state="unknown"] .version-value,.version[data-state="na"] .version-value{color:var(--unknown)}
-.registry-panel{margin-top:1.25rem;border:1px solid var(--subtle);border-radius:12px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
-.registry-head{display:flex;align-items:flex-end;justify-content:space-between;gap:1rem;padding:1rem 1rem .85rem;border-bottom:1px solid var(--subtle)}
-.registry-head h2{margin:0;font-size:15px;font-weight:650}
-.registry-head p{margin:.25rem 0 0;color:var(--muted);font:10.5px/1.4 Roboto,sans-serif}
+[data-state="active"]>.status-dot,.compact-status span[data-state="active"] .status-dot,.table-state[data-state="active"] .status-dot{background:var(--positive)}
+[data-state="pending"]>.status-dot,.compact-status span[data-state="pending"] .status-dot,.table-state[data-state="pending"] .status-dot{background:var(--warning)}
+[data-state="offline"]>.status-dot,.compact-status span[data-state="offline"] .status-dot,.table-state[data-state="offline"] .status-dot{background:var(--negative)}
+[data-state="na"]>.status-dot,.compact-status span[data-state="na"] .status-dot,.table-state[data-state="na"] .status-dot{background:var(--unknown)}
+.flow-strip{display:flex;flex-wrap:wrap;gap:.4rem;padding:.62rem .7rem;border:1px solid var(--subtle);border-radius:8px;background:rgba(255,255,255,.72)}
+.flow-label{align-self:center;margin-right:.15rem;color:var(--muted);font:700 8px/1.2 Roboto,sans-serif;letter-spacing:.055em;text-transform:uppercase}
+.flow-chip{display:inline-flex;align-items:center;gap:.35rem;padding:.3rem .45rem;border-radius:5px;background:#fff;border:1px solid var(--border);color:var(--deep);font:700 8.5px/1.2 Roboto,sans-serif}
+.detail-panel{display:none;grid-template-columns:minmax(170px,.65fr) minmax(0,1.35fr);gap:1rem;padding:.78rem .9rem;border-left:3px solid var(--mid);border-radius:0 8px 8px 0;background:#fff;box-shadow:var(--shadow)}
+.detail-panel.is-visible{display:grid}
+.detail-title{font-size:13px;font-weight:700}
+.detail-description{margin-top:.3rem;color:var(--muted);font:10px/1.45 Roboto,sans-serif}
+.detail-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.4rem}
+.detail-cell{padding:.45rem .5rem;border-radius:6px;background:#F7FAFA}
+.detail-key{display:block;color:var(--muted);font:700 7.5px/1.2 Roboto,sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.detail-value{display:block;margin-top:.18rem;color:var(--deep);font:700 9px/1.3 Roboto,sans-serif;overflow:hidden;text-overflow:ellipsis}
+.technical-registry{margin-top:1.1rem;border:1px solid var(--subtle);border-radius:10px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
+.technical-registry summary{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.82rem 1rem;cursor:pointer;list-style:none}
+.technical-registry summary::-webkit-details-marker{display:none}
+.registry-summary-title{font-size:12px;font-weight:650}
+.registry-summary-meta{color:var(--muted);font:9px Roboto,sans-serif}
+.registry-head{padding:.75rem 1rem;border-top:1px solid var(--subtle);border-bottom:1px solid var(--subtle)}
+.registry-head p{margin:0;color:var(--muted);font:10px/1.4 Roboto,sans-serif}
 .registry-scroll{overflow-x:auto}
 .registry-table{width:100%;border-collapse:collapse;min-width:930px}
 .registry-table th,.registry-table td{padding:.58rem .72rem;border-bottom:1px solid var(--subtle);text-align:left;vertical-align:middle}
@@ -125,17 +128,14 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 .registry-tool:hover{text-decoration:underline}
 .table-state{display:inline-flex;align-items:center;gap:.3rem;white-space:nowrap}
 .table-state .status-dot{width:7px;height:7px}
-.table-state[data-state="active"] .status-dot{background:var(--positive)}
-.table-state[data-state="pending"] .status-dot{background:var(--warning)}
-.table-state[data-state="offline"] .status-dot{background:var(--negative)}
-.table-state[data-state="na"] .status-dot{background:var(--unknown)}
 .empty{padding:2rem;text-align:center;color:var(--muted);font:12px Roboto,sans-serif}
 .footer{position:relative;overflow:hidden;margin-top:2rem;background:var(--deep);color:rgba(255,255,255,.72)}
 .footer-inner{max-width:1440px;margin:auto;padding:1rem 1.8rem;display:flex;justify-content:space-between;gap:1rem;font:10px/1.4 Roboto,sans-serif}
 .footer-graphic{position:absolute;right:-18px;top:50%;width:min(190px,38vw);transform:translateY(-50%);opacity:.8}
-@media(max-width:1180px){.graph{grid-template-columns:minmax(200px,.8fr) minmax(320px,1.15fr) minmax(240px,.9fr)}.lane[data-lane="operations"] .tool-grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:820px){.graph{grid-template-columns:1fr}.system-edges{display:none}.dependencies{display:block}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.header-inner,.shell,.footer-inner{padding-left:1rem;padding-right:1rem}.logo{height:32px}.subtitle,.live-source{display:none}.hero{grid-template-columns:1fr}.canonical{min-width:0}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.tool-card{min-height:0}.registry-head{align-items:flex-start;flex-direction:column}.footer-inner{flex-direction:column}}
+@media(max-width:1180px){.tool-grid{grid-template-columns:repeat(4,minmax(0,1fr))}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:900px){.tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.header-inner,.shell,.footer-inner{padding-left:1rem;padding-right:1rem}.logo{height:32px}.subtitle,.live-source{display:none}.hero{grid-template-columns:1fr}.canonical{min-width:0}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.control-plane,.backbone{grid-template-columns:1fr}.backbone-meta{justify-content:flex-start}.detail-panel.is-visible{grid-template-columns:1fr}.technical-registry summary{align-items:flex-start;flex-direction:column}.footer-inner{flex-direction:column}}
+@media(max-width:430px){.tool-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
@@ -146,7 +146,7 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
       <img class="logo" src="logo.png" alt="Dolomiti NordicSki">
       <div>
         <div class="title"><strong>DNS</strong> <span>HUB</span></div>
-        <div class="subtitle" data-i18n="subtitle">SYSTEM CONTROL BOARD</div>
+        <div class="subtitle" data-i18n="subtitle">SYSTEM ARCHITECTURE</div>
       </div>
     </div>
     <div class="header-actions">
@@ -198,17 +198,34 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
     </div>
   </div>
 
-  <section class="board" id="board" aria-label="DNS System Layers">
-    <svg class="system-edges" id="systemEdges" aria-hidden="true"></svg>
-    <div class="graph" id="graph"></div>
+  <section class="architecture" id="architecture" aria-label="DNS System Architecture">
+    <div class="control-plane" id="controlPlane"></div>
+    <div class="backbone-link" aria-hidden="true"></div>
+    <div class="backbone core" id="coreBackbone"></div>
+    <div class="backbone-link" aria-hidden="true"></div>
+    <div class="backbone foundation" id="foundationBackbone"></div>
+    <div class="backbone-link" aria-hidden="true"></div>
+    <div class="ecosystem">
+      <section class="ecosystem-section">
+        <div class="ecosystem-head" data-i18n="operationsLabel">Operative Tools</div>
+        <div class="tool-grid" id="operationsGrid"></div>
+      </section>
+      <div class="flow-strip" id="specificFlows"></div>
+      <section class="ecosystem-section">
+        <div class="ecosystem-head" data-i18n="extensionsLabel">Extensions & Portale</div>
+        <div class="tool-grid" id="extensionsGrid"></div>
+      </section>
+      <aside class="detail-panel" id="detailPanel" aria-live="polite"></aside>
+    </div>
   </section>
 
-  <section class="registry-panel" aria-labelledby="registryTitle">
+  <details class="technical-registry">
+    <summary>
+      <span class="registry-summary-title" data-i18n="registryTitle">Technical Registry</span>
+      <span class="registry-summary-meta" data-i18n="registryClosed">App · Foundation · Design System · Shared Data · Runtime</span>
+    </summary>
     <div class="registry-head">
-      <div>
-        <h2 id="registryTitle" data-i18n="registryTitle">System Registry</h2>
-        <p data-i18n="registryIntro">Versionen und Laufzeitstatus aller DNS Tools in einer kontrollierbaren Ansicht.</p>
-      </div>
+      <p data-i18n="registryIntro">Versionen und Laufzeitstatus aller DNS Tools in einer kontrollierbaren Ansicht.</p>
     </div>
     <div class="registry-scroll">
       <table class="registry-table">
@@ -228,7 +245,7 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
         <tbody id="registryBody"></tbody>
       </table>
     </div>
-  </section>
+  </details>
 </main>
 
 <footer class="footer" data-dns-tool-footer>
@@ -265,9 +282,9 @@ const db=getFirestore(app);
 
 const copy={
   de:{
-    subtitle:'SYSTEM CONTROL BOARD',
-    headline:'Systemübersicht auf einen Blick.',
-    intro:'Tools, Abhängigkeiten, Laufzeitstatus sowie App- und Plattformversionen in einer klaren operativen Struktur.',
+    subtitle:'SYSTEM ARCHITECTURE',
+    headline:'DNS Plattformarchitektur.',
+    intro:'Control Plane, Core, Foundation und operative Tools in einer gemeinsamen, hierarchischen Systemansicht.',
     canonical:'Aktueller Standard',tools:'Tools',active:'Active',updates:'Updates nötig',issues:'Offline',
     filterAll:'Alle',filterUpdates:'Updates',filterIssues:'Probleme',filterDevelopment:'In Entwicklung',
     legendActive:'Active',legendPending:'Pending',legendOffline:'Offline',
@@ -278,12 +295,12 @@ const copy={
     lifecycle:{production:'Production',beta:'Beta',development:'Development',planned:'Planned',maintenance:'Maintenance',legacy:'Legacy'},
     health:{active:'Active',pending:'Pending',offline:'Offline',na:'N/A'},
     version:{app:'APP',foundation:'F',designSystem:'DS',sharedData:'SD'},
-    dependencies:'Abhängigkeiten',noDependencies:'Keine',registryTitle:'System Registry',registryIntro:'Versionen und Laufzeitstatus aller DNS Tools in einer kontrollierbaren Ansicht.',lifecycleColumn:'Status',current:'aktuell',to:'→',lastCheck:'Registry-Prüfung',lanes:{foundation:'Basis & Governance',operations:'Operative Tools',extensions:'Extensions & Portale'}
+    dependencies:'Abhängigkeiten',noDependencies:'Keine',registryTitle:'Technical Registry',registryClosed:'App · Foundation · Design System · Shared Data · Runtime',registryIntro:'Vollständige technische Versionen und Laufzeitstatus aller DNS Tools.',lifecycleColumn:'Status',current:'aktuell',to:'→',lastCheck:'Registry-Prüfung',operationsLabel:'Operative Tools',extensionsLabel:'Extensions & Portale',specificFlows:'Spezifische Tool-Flows',controlPlane:'Control Plane',coreLayer:'Backend & Datenplattform',foundationLayer:'Shared Runtime & Governance',focusHint:'Tool fokussieren für technische Details'
   },
   it:{
-    subtitle:'SYSTEM MAP & TOOL STATUS',
-    headline:'Panoramica del sistema a colpo d’occhio.',
-    intro:'Tool, dipendenze, stato operativo e versioni app/piattaforma in una struttura chiara e controllabile.',
+    subtitle:'SYSTEM ARCHITECTURE',
+    headline:'Architettura della piattaforma DNS.',
+    intro:'Control Plane, Core, Foundation e tool operativi in una vista gerarchica unica del sistema.',
     canonical:'Standard attuale',tools:'Tool',active:'Attivi',updates:'Aggiornamenti',issues:'Offline',
     filterAll:'Tutti',filterUpdates:'Aggiornamenti',filterIssues:'Problemi',filterDevelopment:'In sviluppo',
     legendActive:'Attivo',legendPending:'In attesa',legendOffline:'Offline',
@@ -294,7 +311,7 @@ const copy={
     lifecycle:{production:'Production',beta:'Beta',development:'Development',planned:'Planned',maintenance:'Maintenance',legacy:'Legacy'},
     health:{active:'Attivo',pending:'In attesa',offline:'Offline',na:'N/A'},
     version:{app:'APP',foundation:'F',designSystem:'DS',sharedData:'SD'},
-    dependencies:'Dipendenze',noDependencies:'Nessuna',registryTitle:'System Registry',registryIntro:'Versioni e stato operativo di tutti i tool DNS in una vista controllabile.',lifecycleColumn:'Stato',current:'attuale',to:'→',lastCheck:'Verifica registry',lanes:{foundation:'Base & governance',operations:'Tool operativi',extensions:'Estensioni & portali'}
+    dependencies:'Dipendenze',noDependencies:'Nessuna',registryTitle:'Technical Registry',registryClosed:'App · Foundation · Design System · Shared Data · Runtime',registryIntro:'Versioni tecniche complete e stato operativo di tutti i tool DNS.',lifecycleColumn:'Stato',current:'attuale',to:'→',lastCheck:'Verifica registry',operationsLabel:'Tool operativi',extensionsLabel:'Estensioni & portali',specificFlows:'Flussi specifici tra tool',controlPlane:'Control Plane',coreLayer:'Backend & piattaforma dati',foundationLayer:'Runtime condiviso & governance',focusHint:'Seleziona un tool per i dettagli tecnici'
   }
 };
 
@@ -322,7 +339,7 @@ const fallback=[
   versions:{
     app:({
       'shared-data':'1.2.1',
-      'hub':'1.0.0',
+      'hub':'1.2.0',
       'data-entry':'0.1.1',
       'analytics':'3.0.1',
       'fair':'2.0.1',
@@ -403,15 +420,6 @@ document.querySelectorAll('[data-lang]').forEach(btn=>btn.addEventListener('clic
 function stateLabel(state){return copy[lang].health[state]||state||'—'}
 function lifecycleLabel(state){return copy[lang].lifecycle[state]||state||'—'}
 function toolLabel(id){return tools.find(tool=>tool.id===id)?.shortLabel||tools.find(tool=>tool.id===id)?.label||id}
-function versionBlock(key,label,tool){
-  const versions=tool.versions||{};
-  const state=versions.state?.[key]||(key==='app'&&versions.app?'reported':'unknown');
-  const current=versions[key];
-  const latest=versions.canonical?.[key]?.version||canonical?.[key]?.version||null;
-  const value=current||(state==='na'?'N/A':'—');
-  const suffix=state==='update-available'&&latest?(' '+copy[lang].to+' '+latest):'';
-  return '<div class="version" data-state="'+state+'" title="'+label+' '+value+(latest?' · '+copy[lang].current+' '+latest:'')+'"><span class="version-key">'+label+'</span><span class="version-value">'+value+suffix+'</span></div>';
-}
 function foundationRuntimeState(tool){
   const state=tool.versions?.state?.foundation;
   if(state==='up-to-date')return 'active';
@@ -419,36 +427,20 @@ function foundationRuntimeState(tool){
   if(state==='na')return 'na';
   return 'na';
 }
-function statusItem(label,state){
+function compactState(label,state){
   const normalized=['active','pending','offline','na'].includes(state)?state:'na';
-  return '<div class="status-item" data-state="'+normalized+'"><span class="status-label">'+label+'</span><span class="status-value"><span class="status-dot"></span>'+stateLabel(normalized)+'</span></div>';
-}
-function dependencyBlock(tool){
-  const deps=tool.dependencies||[];
-  const content=deps.length
-    ? deps.map(id=>'<span class="dependency-chip">'+toolLabel(id)+'</span>').join('')
-    : '<span class="dependency-chip none">'+copy[lang].noDependencies+'</span>';
-  return '<div class="dependencies"><div class="dependencies-label">'+copy[lang].dependencies+'</div><div class="dependency-chips">'+content+'</div></div>';
+  return '<span data-state="'+normalized+'"><span class="status-dot"></span>'+label+'</span>';
 }
 function card(tool){
   const web=tool.health?.web?.state||tool.health?.connectivity||'pending';
   const firebase=tool.health?.firebase?.state||'na';
-  const description=tool.description?.[lang]||tool.description?.de||'';
   const update=tool.versions?.updateRequired;
   const body='<div class="tool-top"><div class="tool-name">'+tool.label+'</div><div class="badges"><span class="badge lifecycle-'+tool.lifecycle+'">'+lifecycleLabel(tool.lifecycle)+'</span>'+(update?'<span class="badge update">UPDATE</span>':'')+'</div></div>'+
-    '<div class="tool-description">'+description+'</div>'+
-    '<div class="status-strip">'+
-      statusItem('WEB',web)+
-      statusItem('FIREBASE',firebase)+
-      statusItem('FOUNDATION',foundationRuntimeState(tool))+
-    '</div>'+
-    '<div class="backend">'+(tool.backend?.label||'—')+'</div>'+
-    dependencyBlock(tool)+
-    '<div class="versions">'+
-      versionBlock('app',copy[lang].version.app,tool)+
-      versionBlock('foundation',copy[lang].version.foundation,tool)+
-      versionBlock('designSystem',copy[lang].version.designSystem,tool)+
-      versionBlock('sharedData',copy[lang].version.sharedData,tool)+
+    '<div class="app-version">v'+(tool.versions?.app||'—')+'</div>'+
+    '<div class="compact-status">'+
+      compactState('WEB',web)+
+      compactState('FIREBASE',firebase)+
+      compactState('FOUNDATION',foundationRuntimeState(tool))+
     '</div>';
   const attrs='class="tool-card" data-tool-id="'+tool.id+'" data-health="'+(tool.health?.connectivity||'pending')+'" data-lifecycle="'+tool.lifecycle+'" data-update="'+String(Boolean(update))+'"';
   return tool.url
@@ -482,6 +474,49 @@ function matchesFilter(tool){
   if(activeFilter==='development')return ['development','beta','planned'].includes(tool.lifecycle);
   return true;
 }
+function infrastructureMarkup(){
+  const hub=tools.find(t=>t.id==='hub');
+  const core=tools.find(t=>t.id==='dns-core');
+  const shared=tools.find(t=>t.id==='shared-data');
+  const hubWeb=hub?.health?.web?.state||hub?.health?.connectivity||'pending';
+  const coreFirebase=core?.health?.firebase?.state||core?.health?.connectivity||'pending';
+  document.getElementById('controlPlane').innerHTML=
+    '<div class="control-plane-main"><div><div class="control-plane-title">DNS HUB</div><div class="control-plane-meta">'+copy[lang].controlPlane+' · App v'+(hub?.versions?.app||'—')+'</div></div></div>'+
+    '<div class="control-plane-state" data-state="'+hubWeb+'"><span class="status-dot"></span>'+stateLabel(hubWeb)+'</div>';
+  document.getElementById('coreBackbone').innerHTML=
+    '<div><div class="backbone-label">DNS CORE</div><div class="backbone-description">'+copy[lang].coreLayer+'</div></div>'+
+    '<div class="backbone-meta"><span class="backbone-token" data-state="'+coreFirebase+'"><span class="status-dot"></span>Firebase '+stateLabel(coreFirebase)+'</span></div>';
+  document.getElementById('foundationBackbone').innerHTML=
+    '<div><div class="backbone-label">DNS SHARED DATA / FOUNDATION</div><div class="backbone-description">'+copy[lang].foundationLayer+'</div></div>'+
+    '<div class="backbone-meta">'+
+      '<span class="backbone-token">F '+(canonical?.foundation?.version||shared?.versions?.foundation||'—')+'</span>'+
+      '<span class="backbone-token">DS '+(canonical?.designSystem?.version||shared?.versions?.designSystem||'—')+'</span>'+
+      '<span class="backbone-token">SD '+(canonical?.sharedData?.version||shared?.versions?.sharedData||'—')+'</span>'+
+    '</div>';
+}
+function specificFlowMarkup(tool){
+  const specific=(tool.dependencies||[]).filter(id=>!['dns-core','shared-data'].includes(id));
+  if(!specific.length)return '';
+  return '<span class="flow-chip">'+specific.map(toolLabel).join(' + ')+' → '+(tool.shortLabel||tool.label)+'</span>';
+}
+function detailMarkup(tool){
+  if(!tool)return '<div><div class="detail-title">'+copy[lang].focusHint+'</div></div>';
+  const v=tool.versions||{};
+  const deps=(tool.dependencies||[]).map(toolLabel).join(' · ')||copy[lang].noDependencies;
+  const description=tool.description?.[lang]||tool.description?.de||'';
+  const cells=[
+    ['App',v.app||'—'],
+    ['Foundation',v.foundation||'—'],
+    ['Design System',v.designSystem||'—'],
+    ['Shared Data',v.sharedData||'—'],
+    ['Backend',tool.backend?.label||'—'],
+    [copy[lang].dependencies,deps],
+    ['Web',stateLabel(tool.health?.web?.state||tool.health?.connectivity||'pending')],
+    ['Firebase',stateLabel(tool.health?.firebase?.state||'na')]
+  ];
+  return '<div><div class="detail-title">'+tool.label+'</div><div class="detail-description">'+description+'</div></div>'+
+    '<div class="detail-grid">'+cells.map(([key,value])=>'<div class="detail-cell"><span class="detail-key">'+key+'</span><span class="detail-value">'+value+'</span></div>').join('')+'</div>';
+}
 function render(){
   const c=copy[lang];
   document.getElementById('canonicalFoundation').textContent=canonical?.foundation?.version||'—';
@@ -503,24 +538,20 @@ function render(){
   const checkedAt=tools.map(t=>t.health?.checkedAt).filter(Boolean).sort().at(-1);
   const checkedLabel=checkedAt?new Date(checkedAt).toLocaleString(lang==='de'?'de-DE':'it-IT',{dateStyle:'short',timeStyle:'short'}):new Date().toLocaleString(lang==='de'?'de-DE':'it-IT',{dateStyle:'short',timeStyle:'short'});
   document.getElementById('footerStatus').textContent=(sourceLive?c.registryLive:c.registryFallback)+' · '+c.lastCheck+' '+checkedLabel;
-  const graph=document.getElementById('graph');
-  const laneConfig=[
-    {id:'foundation',groups:['platform']},
-    {id:'operations',groups:['operations']},
-    {id:'extensions',groups:['communication','portal','legacy']}
-  ];
-  graph.innerHTML=laneConfig.map(lane=>{
-    const sections=lane.groups.map(group=>{
-      const rows=visible.filter(t=>t.group===group).sort((a,b)=>(a.order||0)-(b.order||0));
-      if(!rows.length)return '';
-      return '<section class="group" data-group="'+group+'"><div class="group-head"><h2>'+c.groups[group]+'</h2></div><div class="tool-grid">'+rows.map(card).join('')+'</div></section>';
-    }).join('');
-    return '<section class="lane" data-lane="'+lane.id+'"><div class="lane-head">'+c.lanes[lane.id]+'</div>'+sections+'</section>';
-  }).join('');
+
+  infrastructureMarkup();
+  const operations=visible.filter(t=>t.group==='operations').sort((a,b)=>(a.order||0)-(b.order||0));
+  const extensions=visible.filter(t=>['communication','portal','legacy'].includes(t.group)).sort((a,b)=>(a.order||0)-(b.order||0));
+  document.getElementById('operationsGrid').innerHTML=operations.map(card).join('');
+  document.getElementById('extensionsGrid').innerHTML=extensions.map(card).join('');
+  const flows=visible.map(specificFlowMarkup).filter(Boolean);
+  document.getElementById('specificFlows').innerHTML='<span class="flow-label">'+c.specificFlows+'</span>'+(flows.length?flows.join(''):'<span class="flow-chip">'+c.noDependencies+'</span>');
   document.getElementById('registryBody').innerHTML=visible.slice().sort((a,b)=>(a.order||0)-(b.order||0)).map(registryRow).join('');
+  const detail=document.getElementById('detailPanel');
+  detail.innerHTML=detailMarkup(null);
+  detail.classList.remove('is-visible');
   applyFilter();
   bindRelations();
-  requestAnimationFrame(drawSystemEdges);
 }
 function applyFilter(){
   tools.forEach(tool=>{
@@ -530,69 +561,16 @@ function applyFilter(){
     if(cardEl)cardEl.classList.toggle('is-filtered',!show);
     if(rowEl)rowEl.classList.toggle('is-filtered',!show);
   });
-  document.querySelectorAll('.group').forEach(group=>{
-    const hasVisible=[...group.querySelectorAll('.tool-card')].some(card=>!card.classList.contains('is-filtered'));
-    group.style.display=hasVisible?'':'none';
-  });
 }
 document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('click',()=>{
   activeFilter=btn.dataset.filter;
   document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
   clearRelations();
   applyFilter();
-  requestAnimationFrame(drawSystemEdges);
 }));
-function drawSystemEdges(){
-  const wrap=document.getElementById('board');
-  const svg=document.getElementById('systemEdges');
-  if(!wrap||!svg||innerWidth<=820)return;
-  const wr=wrap.getBoundingClientRect();
-  svg.setAttribute('viewBox','0 0 '+wr.width+' '+wr.height);
-  svg.setAttribute('width',wr.width);
-  svg.setAttribute('height',wr.height);
-  svg.innerHTML='';
-  for(const tool of tools){
-    const target=document.querySelector('[data-tool-id="'+tool.id+'"]');
-    if(!target||target.classList.contains('is-filtered'))continue;
-    const tr=target.getBoundingClientRect();
-    for(const depId of tool.dependencies||[]){
-      const source=document.querySelector('[data-tool-id="'+depId+'"]');
-      if(!source||source.classList.contains('is-filtered'))continue;
-      const sr=source.getBoundingClientRect();
-      const sourceRight=sr.right<=tr.left;
-      const targetRight=tr.right<=sr.left;
-      let x1,y1,x2,y2;
-      if(sourceRight){
-        x1=sr.right-wr.left;y1=sr.top+sr.height/2-wr.top;
-        x2=tr.left-wr.left;y2=tr.top+tr.height/2-wr.top;
-      }else if(targetRight){
-        x1=sr.left-wr.left;y1=sr.top+sr.height/2-wr.top;
-        x2=tr.right-wr.left;y2=tr.top+tr.height/2-wr.top;
-      }else{
-        x1=sr.left+sr.width/2-wr.left;y1=sr.bottom-wr.top;
-        x2=tr.left+tr.width/2-wr.left;y2=tr.top-wr.top;
-      }
-      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-      let d;
-      if(Math.abs(x2-x1)>40){
-        const midX=(x1+x2)/2;
-        d='M '+x1+' '+y1+' H '+midX+' V '+y2+' H '+x2;
-      }else{
-        const midY=(y1+y2)/2;
-        d='M '+x1+' '+y1+' V '+midY+' H '+x2+' V '+y2;
-      }
-      path.setAttribute('d',d);
-      path.setAttribute('class','system-edge');
-      path.dataset.source=depId;
-      path.dataset.target=tool.id;
-      path.dataset.state=tool.health?.connectivity||'pending';
-      svg.appendChild(path);
-    }
-  }
-}
 function relationIds(id){
   const selected=tools.find(tool=>tool.id===id);
-  const upstream=new Set(selected?.dependencies||[]);
+  const upstream=new Set((selected?.dependencies||[]).filter(dep=>!['dns-core','shared-data'].includes(dep)));
   const downstream=new Set(tools.filter(tool=>(tool.dependencies||[]).includes(id)).map(tool=>tool.id));
   return {upstream,downstream,all:new Set([id,...upstream,...downstream])};
 }
@@ -611,13 +589,13 @@ function setRelations(id){
     row.classList.toggle('is-related',!filtered&&relations.all.has(current));
     row.classList.toggle('is-unrelated',!filtered&&!relations.all.has(current));
   });
-  document.querySelectorAll('.system-edge').forEach(edge=>{
-    edge.classList.toggle('is-highlighted',edge.dataset.source===id||edge.dataset.target===id);
-  });
+  const tool=tools.find(item=>item.id===id);
+  const detail=document.getElementById('detailPanel');
+  detail.innerHTML=detailMarkup(tool);
+  detail.classList.add('is-visible');
 }
 function clearRelations(){
   document.querySelectorAll('.is-focus,.is-related,.is-unrelated').forEach(el=>el.classList.remove('is-focus','is-related','is-unrelated'));
-  document.querySelectorAll('.system-edge.is-highlighted').forEach(edge=>edge.classList.remove('is-highlighted'));
 }
 function bindRelations(){
   document.querySelectorAll('.tool-card').forEach(el=>{
@@ -634,7 +612,6 @@ function bindRelations(){
   });
 }
 
-addEventListener('resize',()=>requestAnimationFrame(drawSystemEdges),{passive:true});
 setLang(lang);
 loadRegistry();
 setInterval(()=>loadRegistry(),5*60*1000);
