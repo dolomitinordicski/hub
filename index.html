@@ -81,7 +81,7 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 .health[data-state="pending"] .health-dot{background:var(--warning);box-shadow:0 0 0 3px rgba(183,123,0,.10)}
 .health[data-state="offline"] .health-dot{background:var(--negative);box-shadow:0 0 0 3px rgba(153,60,29,.10)}
 .backend{margin-top:.3rem;color:var(--muted);font:9px/1.3 Roboto,sans-serif}
-.versions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.35rem;margin-top:auto;padding-top:.75rem;border-top:1px solid var(--subtle)}
+.versions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.35rem;margin-top:auto;padding-top:.75rem;border-top:1px solid var(--subtle)}
 .version{min-width:0;padding:.38rem .42rem;border-radius:6px;background:#F7FAFA}
 .version-key{display:block;color:var(--muted);font:700 8px Roboto,sans-serif;letter-spacing:.04em}
 .version-value{display:block;overflow:hidden;text-overflow:ellipsis;color:var(--deep);font:700 10px Roboto,sans-serif;white-space:nowrap}
@@ -128,7 +128,7 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
     <div>
       <div class="kicker">Dolomiti NordicSki Digital Platform</div>
       <h1 data-i18n="headline">Systemübersicht auf einen Blick.</h1>
-      <p data-i18n="intro">Tools, Abhängigkeiten, Entwicklungsstatus, Backend-Verbindungen und Foundation-Versionen in einer gemeinsamen operativen Ansicht.</p>
+      <p data-i18n="intro">Tools, Abhängigkeiten, Entwicklungsstatus, Backend-Verbindungen sowie App- und Plattformversionen in einer gemeinsamen operativen Ansicht.</p>
     </div>
     <aside class="canonical">
       <div class="canonical-label" data-i18n="canonical">Aktueller Standard</div>
@@ -214,13 +214,13 @@ const copy={
     groups:{platform:'Plattform',operations:'Betrieb & Daten',communication:'Kommunikation & Content',portal:'Portal',legacy:'Legacy / Maintenance'},
     lifecycle:{production:'Production',beta:'Beta',development:'Development',planned:'Planned',maintenance:'Maintenance',legacy:'Legacy'},
     health:{active:'Active',pending:'Pending',offline:'Offline',na:'N/A'},
-    version:{foundation:'F',designSystem:'DS',sharedData:'SD'},
+    version:{app:'APP',foundation:'F',designSystem:'DS',sharedData:'SD'},
     current:'aktuell',to:'→'
   },
   it:{
     subtitle:'SYSTEM MAP & TOOL STATUS',
     headline:'Panoramica del sistema a colpo d’occhio.',
-    intro:'Tool, dipendenze, stato di sviluppo, connessioni backend e versioni Foundation in un’unica vista operativa.',
+    intro:'Tool, dipendenze, stato di sviluppo, connessioni backend e versioni app/piattaforma in un’unica vista operativa.',
     canonical:'Standard attuale',tools:'Tool',active:'Attivi',updates:'Aggiornamenti',issues:'Offline',
     filterAll:'Tutti',filterUpdates:'Aggiornamenti',filterIssues:'Problemi',filterDevelopment:'In sviluppo',
     legendActive:'Attivo',legendPending:'In attesa',legendOffline:'Offline',
@@ -230,7 +230,7 @@ const copy={
     groups:{platform:'Piattaforma',operations:'Operatività & dati',communication:'Comunicazione & content',portal:'Portal',legacy:'Legacy / Maintenance'},
     lifecycle:{production:'Production',beta:'Beta',development:'Development',planned:'Planned',maintenance:'Maintenance',legacy:'Legacy'},
     health:{active:'Attivo',pending:'In attesa',offline:'Offline',na:'N/A'},
-    version:{foundation:'F',designSystem:'DS',sharedData:'SD'},
+    version:{app:'APP',foundation:'F',designSystem:'DS',sharedData:'SD'},
     current:'attuale',to:'→'
   }
 };
@@ -257,6 +257,16 @@ const fallback=[
   dependencies,order,visible:true,
   description:{de:'DNS Tool',it:'Tool DNS'},
   versions:{
+    app:({
+      'shared-data':'1.2.1',
+      'hub':'1.0.0',
+      'data-entry':'0.1.1',
+      'analytics':'3.0.1',
+      'fair':'2.0.1',
+      'faktura':'0.1.1',
+      'polls':'0.1.1',
+      'flyer-studio':'0.0.0'
+    })[id]??null,
     foundation:['data-entry','analytics','fair','faktura','polls'].includes(id)?'1.2.1':id==='flyer-studio'?'1.2.0':id==='hub'||id==='shared-data'?'1.2.1':null,
     designSystem:['data-entry','analytics','fair','faktura','polls','flyer-studio','hub','shared-data'].includes(id)?'1.25.0':null,
     sharedData:['data-entry','analytics','fair','faktura','polls'].includes(id)?'1.2.1':id==='flyer-studio'?'1.2.0':id==='hub'||id==='shared-data'?'1.2.1':null,
@@ -331,7 +341,7 @@ function stateLabel(state){return copy[lang].health[state]||state||'—'}
 function lifecycleLabel(state){return copy[lang].lifecycle[state]||state||'—'}
 function versionBlock(key,label,tool){
   const versions=tool.versions||{};
-  const state=versions.state?.[key]||'unknown';
+  const state=versions.state?.[key]||(key==='app'&&versions.app?'reported':'unknown');
   const current=versions[key];
   const latest=versions.canonical?.[key]?.version||canonical?.[key]?.version||null;
   const value=current|| (state==='na'?'N/A':'—');
@@ -346,6 +356,7 @@ function card(tool){
     '<div class="health" data-state="'+health+'"><span class="health-dot"></span><span>'+stateLabel(health)+'</span></div>'+
     '<div class="backend">'+(tool.backend?.label||'—')+'</div>'+
     '<div class="versions">'+
+      versionBlock('app',copy[lang].version.app,tool)+
       versionBlock('foundation',copy[lang].version.foundation,tool)+
       versionBlock('designSystem',copy[lang].version.designSystem,tool)+
       versionBlock('sharedData',copy[lang].version.sharedData,tool)+
