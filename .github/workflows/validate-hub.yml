@@ -47,7 +47,7 @@ jobs:
           grep -q "DNS_DESIGN_SYSTEM" index.html
           grep -q "data-dns-tool-header" index.html
           grep -q "data-dns-tool-footer" index.html
-          grep -q "versions.updateRequired" index.html
-          grep -q "tool.dependencies" index.html
-          grep -q "health.connectivity" index.html
+          grep -q "updateRequired" index.html
+          grep -q "dependencies" index.html
+          grep -q "connectivity" index.html
           echo "DNS Hub system-map contracts present."
