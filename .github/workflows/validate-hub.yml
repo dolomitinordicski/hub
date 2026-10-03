@@ -1,0 +1,53 @@
+name: Validate DNS Hub
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - '.github/workflows/validate-hub.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - '.github/workflows/validate-hub.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Extract module script
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          html = Path("index.html").read_text()
+          match = re.search(r'<script type="module">(.*?)</script>', html, re.S)
+          if not match:
+              raise SystemExit("Missing module script")
+          Path("/tmp/hub.mjs").write_text(match.group(1))
+
+      - name: Validate JavaScript syntax
+        run: node --check /tmp/hub.mjs
+
+      - name: Validate Hub contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q "toolRegistryPublic" index.html
+          grep -q "DNS_DESIGN_SYSTEM" index.html
+          grep -q "data-dns-tool-header" index.html
+          grep -q "data-dns-tool-footer" index.html
+          grep -q "versions.updateRequired" index.html
+          grep -q "tool.dependencies" index.html
+          grep -q "health.connectivity" index.html
+          echo "DNS Hub system-map contracts present."
