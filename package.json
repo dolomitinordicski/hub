@@ -1,0 +1,6 @@
+{
+  "name": "dns-hub",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Dolomiti NordicSki system map and tool status hub"
+}
