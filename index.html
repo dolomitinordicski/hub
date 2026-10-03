@@ -56,14 +56,23 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 .legend span{display:inline-flex;align-items:center;gap:.3rem}
 .legend i{display:inline-block;width:8px;height:8px;border-radius:50%}
 .legend .active{background:var(--positive)}.legend .pending{background:var(--warning)}.legend .offline{background:var(--negative)}.legend .na{background:var(--unknown)}
-.graph-wrap{background:rgba(255,255,255,.55);border:1px solid var(--subtle);border-radius:14px;padding:1.15rem}
-.graph{display:grid;gap:1.15rem}
-.group{position:relative}
+.graph-wrap{position:relative;background:rgba(255,255,255,.55);border:1px solid var(--subtle);border-radius:14px;padding:1.15rem;overflow:hidden}
+.graph{position:relative;z-index:2;display:grid;grid-template-columns:minmax(220px,.8fr) minmax(320px,1.25fr) minmax(260px,1fr);gap:1.15rem;align-items:start}
+.lane{display:grid;gap:1rem;align-content:start;min-width:0}
+.lane-head{display:flex;align-items:center;gap:.55rem;margin-bottom:.05rem;color:var(--mid);font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
+.lane-head:after{content:"";height:1px;background:var(--border);flex:1}
+.group{position:relative;min-width:0}
 .group-head{display:flex;align-items:center;gap:.65rem;margin:.15rem 0 .55rem}
 .group-head h2{margin:0;color:var(--mid);font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
 .group-head:after{content:"";height:1px;background:var(--border);flex:1}
-.tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
-.group[data-group="platform"] .tool-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-width:960px;margin:0 auto}
+.tool-grid{display:grid;grid-template-columns:1fr;gap:.65rem}
+.lane[data-lane="operations"] .tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+.system-edges{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:visible}
+.system-edge{fill:none;stroke:var(--unknown);stroke-width:1.4;opacity:.22;vector-effect:non-scaling-stroke;transition:opacity .15s ease,stroke-width .15s ease}
+.system-edge[data-state="active"]{stroke:var(--positive)}
+.system-edge[data-state="pending"]{stroke:var(--warning)}
+.system-edge[data-state="offline"]{stroke:var(--negative)}
+.system-edge.is-highlighted{opacity:.9;stroke-width:2.3}
 .tool-card{position:relative;display:flex;min-height:196px;flex-direction:column;padding:.95rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);color:inherit;text-decoration:none;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;outline:none}
 .tool-card:hover,.tool-card:focus-visible{transform:translateY(-2px);border-color:var(--light);box-shadow:0 8px 22px rgba(13,77,94,.10)}
 .tool-card.is-dimmed{opacity:.2;pointer-events:none}
@@ -81,7 +90,7 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 .health[data-state="pending"] .health-dot{background:var(--warning);box-shadow:0 0 0 3px rgba(183,123,0,.10)}
 .health[data-state="offline"] .health-dot{background:var(--negative);box-shadow:0 0 0 3px rgba(153,60,29,.10)}
 .backend{margin-top:.3rem;color:var(--muted);font:9px/1.3 Roboto,sans-serif}
-.dependencies{display:flex;flex-wrap:wrap;gap:.3rem;margin:.65rem 0 .15rem}
+.dependencies{display:none;flex-wrap:wrap;gap:.3rem;margin:.65rem 0 .15rem}
 .dependency{display:inline-flex;align-items:center;gap:.28rem;padding:.28rem .42rem;border-radius:999px;background:var(--subtle);color:var(--mid);font:700 8px/1.1 Roboto,sans-serif;letter-spacing:.025em}
 .dependency:before{content:"←";font-size:9px}
 .dependency.none{color:var(--unknown);background:#F4F6F6}
@@ -102,8 +111,8 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 .footer{position:relative;overflow:hidden;margin-top:2rem;background:var(--deep);color:rgba(255,255,255,.72)}
 .footer-inner{max-width:1440px;margin:auto;padding:1rem 1.8rem;display:flex;justify-content:space-between;gap:1rem;font:10px/1.4 Roboto,sans-serif}
 .footer-graphic{position:absolute;right:-18px;top:50%;width:min(190px,38vw);transform:translateY(-50%);opacity:.8}
-@media(max-width:1050px){.tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:760px){.header-inner,.shell,.footer-inner{padding-left:1rem;padding-right:1rem}.logo{height:32px}.subtitle,.live-source{display:none}.hero{grid-template-columns:1fr}.canonical{min-width:0}.tool-grid,.group[data-group="platform"] .tool-grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.tool-card{min-height:150px}.tooltip{position:static;display:block;margin-top:.55rem;background:transparent;color:var(--muted);box-shadow:none;padding:0}.tooltip:after{display:none}.footer-inner{flex-direction:column}}
+@media(max-width:1180px){.graph{grid-template-columns:minmax(200px,.8fr) minmax(300px,1.1fr) minmax(240px,.9fr)}.lane[data-lane="operations"] .tool-grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:820px){.header-inner,.shell,.footer-inner{padding-left:1rem;padding-right:1rem}.logo{height:32px}.subtitle,.live-source{display:none}.hero{grid-template-columns:1fr}.canonical{min-width:0}.graph{grid-template-columns:1fr}.system-edges{display:none}.dependencies{display:flex}.lane[data-lane="operations"] .tool-grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.tool-card{min-height:150px}.tooltip{position:static;display:block;margin-top:.55rem;background:transparent;color:var(--muted);box-shadow:none;padding:0}.tooltip:after{display:none}.footer-inner{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
@@ -168,6 +177,7 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
   </div>
 
   <section class="graph-wrap" id="graphWrap">
+    <svg class="system-edges" id="systemEdges" aria-hidden="true"></svg>
     <div class="graph" id="graph"></div>
   </section>
 </main>
@@ -219,7 +229,7 @@ const copy={
     lifecycle:{production:'Production',beta:'Beta',development:'Development',planned:'Planned',maintenance:'Maintenance',legacy:'Legacy'},
     health:{active:'Active',pending:'Pending',offline:'Offline',na:'N/A'},
     version:{app:'APP',foundation:'F',designSystem:'DS',sharedData:'SD'},
-    current:'aktuell',to:'→',dependsOn:'Abhängigkeiten',noDependencies:'keine',updatePrefix:'Aktualisieren:',lastCheck:'Registry-Prüfung'
+    current:'aktuell',to:'→',dependsOn:'Abhängigkeiten',noDependencies:'keine',updatePrefix:'Aktualisieren:',lastCheck:'Registry-Prüfung',lanes:{foundation:'Basis & Governance',operations:'Operative Tools',extensions:'Extensions & Portale'}
   },
   it:{
     subtitle:'SYSTEM MAP & TOOL STATUS',
@@ -235,7 +245,7 @@ const copy={
     lifecycle:{production:'Production',beta:'Beta',development:'Development',planned:'Planned',maintenance:'Maintenance',legacy:'Legacy'},
     health:{active:'Attivo',pending:'In attesa',offline:'Offline',na:'N/A'},
     version:{app:'APP',foundation:'F',designSystem:'DS',sharedData:'SD'},
-    current:'attuale',to:'→',dependsOn:'Dipendenze',noDependencies:'nessuna',updatePrefix:'Aggiornare:',lastCheck:'Verifica registry'
+    current:'attuale',to:'→',dependsOn:'Dipendenze',noDependencies:'nessuna',updatePrefix:'Aggiornare:',lastCheck:'Verifica registry',lanes:{foundation:'Base & governance',operations:'Tool operativi',extensions:'Estensioni & portali'}
   }
 };
 
@@ -413,15 +423,23 @@ function render(){
   const checkedAt=tools.map(t=>t.health?.checkedAt).filter(Boolean).sort().at(-1);
   const checkedLabel=checkedAt?new Date(checkedAt).toLocaleString(lang==='de'?'de-DE':'it-IT',{dateStyle:'short',timeStyle:'short'}):new Date().toLocaleString(lang==='de'?'de-DE':'it-IT',{dateStyle:'short',timeStyle:'short'});
   document.getElementById('footerStatus').textContent=(sourceLive?c.registryLive:c.registryFallback)+' · '+c.lastCheck+' '+checkedLabel;
-  const groups=['platform','operations','communication','portal','legacy'];
   const graph=document.getElementById('graph');
-  graph.innerHTML=groups.map(group=>{
-    const rows=visible.filter(t=>t.group===group).sort((a,b)=>(a.order||0)-(b.order||0));
-    if(!rows.length)return '';
-    return '<section class="group" data-group="'+group+'"><div class="group-head"><h2>'+c.groups[group]+'</h2></div><div class="tool-grid">'+rows.map(card).join('')+'</div></section>';
+  const laneConfig=[
+    {id:'foundation',groups:['platform']},
+    {id:'operations',groups:['operations']},
+    {id:'extensions',groups:['communication','portal','legacy']}
+  ];
+  graph.innerHTML=laneConfig.map(lane=>{
+    const sections=lane.groups.map(group=>{
+      const rows=visible.filter(t=>t.group===group).sort((a,b)=>(a.order||0)-(b.order||0));
+      if(!rows.length)return '';
+      return '<section class="group" data-group="'+group+'"><div class="group-head"><h2>'+c.groups[group]+'</h2></div><div class="tool-grid">'+rows.map(card).join('')+'</div></section>';
+    }).join('');
+    return '<section class="lane" data-lane="'+lane.id+'"><div class="lane-head">'+c.lanes[lane.id]+'</div>'+sections+'</section>';
   }).join('');
   applyFilter();
   bindCards();
+  requestAnimationFrame(drawSystemEdges);
 }
 function applyFilter(){
   tools.forEach(tool=>{
@@ -433,16 +451,73 @@ document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('cl
   activeFilter=btn.dataset.filter;
   document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
   applyFilter();
+  requestAnimationFrame(drawSystemEdges);
 }));
 
+function drawSystemEdges(){
+  const wrap=document.getElementById('graphWrap');
+  const svg=document.getElementById('systemEdges');
+  if(!wrap||!svg||innerWidth<=820)return;
+  const wr=wrap.getBoundingClientRect();
+  svg.setAttribute('viewBox','0 0 '+wr.width+' '+wr.height);
+  svg.setAttribute('width',wr.width);
+  svg.setAttribute('height',wr.height);
+  svg.innerHTML='';
+  for(const tool of tools){
+    const target=document.querySelector('[data-tool-id="'+tool.id+'"]');
+    if(!target||target.classList.contains('is-dimmed'))continue;
+    const tr=target.getBoundingClientRect();
+    for(const depId of tool.dependencies||[]){
+      const source=document.querySelector('[data-tool-id="'+depId+'"]');
+      if(!source||source.classList.contains('is-dimmed'))continue;
+      const sr=source.getBoundingClientRect();
+      const sourceRight=sr.right<=tr.left;
+      const targetRight=tr.right<=sr.left;
+      let x1,y1,x2,y2;
+      if(sourceRight){
+        x1=sr.right-wr.left;y1=sr.top+sr.height/2-wr.top;
+        x2=tr.left-wr.left;y2=tr.top+tr.height/2-wr.top;
+      }else if(targetRight){
+        x1=sr.left-wr.left;y1=sr.top+sr.height/2-wr.top;
+        x2=tr.right-wr.left;y2=tr.top+tr.height/2-wr.top;
+      }else{
+        x1=sr.left+sr.width/2-wr.left;y1=sr.bottom-wr.top;
+        x2=tr.left+tr.width/2-wr.left;y2=tr.top-wr.top;
+      }
+      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+      let d;
+      if(Math.abs(x2-x1)>40){
+        const midX=(x1+x2)/2;
+        d='M '+x1+' '+y1+' H '+midX+' V '+y2+' H '+x2;
+      }else{
+        const midY=(y1+y2)/2;
+        d='M '+x1+' '+y1+' V '+midY+' H '+x2+' V '+y2;
+      }
+      path.setAttribute('d',d);
+      path.setAttribute('class','system-edge');
+      path.dataset.source=depId;
+      path.dataset.target=tool.id;
+      path.dataset.state=tool.health?.connectivity||'pending';
+      svg.appendChild(path);
+    }
+  }
+}
 function bindCards(){
   document.querySelectorAll('.tool-card').forEach(el=>{
-    el.addEventListener('mouseenter',()=>el.classList.add('is-focus'));
-    el.addEventListener('mouseleave',()=>el.classList.remove('is-focus'));
-    el.addEventListener('focus',()=>el.classList.add('is-focus'));
-    el.addEventListener('blur',()=>el.classList.remove('is-focus'));
+    const id=el.dataset.toolId;
+    const toggle=on=>{
+      el.classList.toggle('is-focus',on);
+      document.querySelectorAll('.system-edge').forEach(edge=>{
+        edge.classList.toggle('is-highlighted',on&&(edge.dataset.source===id||edge.dataset.target===id));
+      });
+    };
+    el.addEventListener('mouseenter',()=>toggle(true));
+    el.addEventListener('mouseleave',()=>toggle(false));
+    el.addEventListener('focus',()=>toggle(true));
+    el.addEventListener('blur',()=>toggle(false));
   });
 }
+addEventListener('resize',()=>requestAnimationFrame(drawSystemEdges),{passive:true});
 
 setLang(lang);
 loadRegistry();
