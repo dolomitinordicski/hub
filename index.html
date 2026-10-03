@@ -257,16 +257,16 @@ const fallback=[
   dependencies,order,visible:true,
   description:{de:'DNS Tool',it:'Tool DNS'},
   versions:{
-    foundation:['data-entry','analytics','fair','faktura','polls','flyer-studio'].includes(id)?'1.2.0':id==='hub'||id==='shared-data'?'1.2.1':null,
-    designSystem:id==='hub'||id==='shared-data'?'1.25.0':null,
-    sharedData:['data-entry','analytics','fair','faktura','polls','flyer-studio'].includes(id)?'1.2.0':id==='hub'||id==='shared-data'?'1.2.1':null,
+    foundation:['data-entry','analytics','fair','faktura','polls'].includes(id)?'1.2.1':id==='flyer-studio'?'1.2.0':id==='hub'||id==='shared-data'?'1.2.1':null,
+    designSystem:['data-entry','analytics','fair','faktura','polls','flyer-studio','hub','shared-data'].includes(id)?'1.25.0':null,
+    sharedData:['data-entry','analytics','fair','faktura','polls'].includes(id)?'1.2.1':id==='flyer-studio'?'1.2.0':id==='hub'||id==='shared-data'?'1.2.1':null,
     canonical:fallbackCanonical,
     state:{
-      foundation:['data-entry','analytics','fair','faktura','polls','flyer-studio'].includes(id)?'update-available':id==='hub'||id==='shared-data'?'up-to-date':'unknown',
-      designSystem:id==='hub'||id==='shared-data'?'up-to-date':'unknown',
-      sharedData:['data-entry','analytics','fair','faktura','polls','flyer-studio'].includes(id)?'update-available':id==='hub'||id==='shared-data'?'up-to-date':'unknown'
+      foundation:['data-entry','analytics','fair','faktura','polls','hub','shared-data'].includes(id)?'up-to-date':id==='flyer-studio'?'update-available':'unknown',
+      designSystem:['data-entry','analytics','fair','faktura','polls','flyer-studio','hub','shared-data'].includes(id)?'up-to-date':'unknown',
+      sharedData:['data-entry','analytics','fair','faktura','polls','hub','shared-data'].includes(id)?'up-to-date':id==='flyer-studio'?'update-available':'unknown'
     },
-    updateRequired:['data-entry','analytics','fair','faktura','polls','flyer-studio'].includes(id)
+    updateRequired:id==='flyer-studio'
   },
   health:{connectivity:backend==='none'?'na':backend==='dns-core'?'pending':'pending',web:{state:'pending'},firebase:{state:backend==='none'?'na':'pending'}}
 }));
