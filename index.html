@@ -56,15 +56,15 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 .legend span{display:inline-flex;align-items:center;gap:.3rem}
 .legend i{display:inline-block;width:8px;height:8px;border-radius:50%}
 .legend .active{background:var(--positive)}.legend .pending{background:var(--warning)}.legend .offline{background:var(--negative)}.legend .na{background:var(--unknown)}
-.graph-wrap{position:relative;background:rgba(255,255,255,.55);border:1px solid var(--subtle);border-radius:14px;padding:1.15rem;overflow:hidden}
-.graph{position:relative;z-index:2;display:grid;gap:1rem}
+.graph-wrap{background:rgba(255,255,255,.55);border:1px solid var(--subtle);border-radius:14px;padding:1.15rem}
+.graph{display:grid;gap:1.15rem}
 .group{position:relative}
 .group-head{display:flex;align-items:center;gap:.65rem;margin:.15rem 0 .55rem}
 .group-head h2{margin:0;color:var(--mid);font-size:10px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
 .group-head:after{content:"";height:1px;background:var(--border);flex:1}
 .tool-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
 .group[data-group="platform"] .tool-grid{grid-template-columns:repeat(3,minmax(0,1fr));max-width:960px;margin:0 auto}
-.tool-card{position:relative;display:flex;min-height:168px;flex-direction:column;padding:.95rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);color:inherit;text-decoration:none;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;outline:none}
+.tool-card{position:relative;display:flex;min-height:196px;flex-direction:column;padding:.95rem;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);color:inherit;text-decoration:none;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;outline:none}
 .tool-card:hover,.tool-card:focus-visible{transform:translateY(-2px);border-color:var(--light);box-shadow:0 8px 22px rgba(13,77,94,.10)}
 .tool-card.is-dimmed{opacity:.2;pointer-events:none}
 .tool-card.is-focus{border-color:var(--mid);box-shadow:0 8px 24px rgba(13,77,94,.12)}
@@ -81,25 +81,29 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 .health[data-state="pending"] .health-dot{background:var(--warning);box-shadow:0 0 0 3px rgba(183,123,0,.10)}
 .health[data-state="offline"] .health-dot{background:var(--negative);box-shadow:0 0 0 3px rgba(153,60,29,.10)}
 .backend{margin-top:.3rem;color:var(--muted);font:9px/1.3 Roboto,sans-serif}
+.dependencies{display:flex;flex-wrap:wrap;gap:.3rem;margin:.65rem 0 .15rem}
+.dependency{display:inline-flex;align-items:center;gap:.28rem;padding:.28rem .42rem;border-radius:999px;background:var(--subtle);color:var(--mid);font:700 8px/1.1 Roboto,sans-serif;letter-spacing:.025em}
+.dependency:before{content:"←";font-size:9px}
+.dependency.none{color:var(--unknown);background:#F4F6F6}
+.dependency.none:before{content:"—"}
 .versions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.35rem;margin-top:auto;padding-top:.75rem;border-top:1px solid var(--subtle)}
 .version{min-width:0;padding:.38rem .42rem;border-radius:6px;background:#F7FAFA}
 .version-key{display:block;color:var(--muted);font:700 8px Roboto,sans-serif;letter-spacing:.04em}
 .version-value{display:block;overflow:hidden;text-overflow:ellipsis;color:var(--deep);font:700 10px Roboto,sans-serif;white-space:nowrap}
 .version[data-state="update-available"]{background:#FFF5DB}.version[data-state="update-available"] .version-value{color:#8C6500}
+.version[data-state="ahead"]{background:#EDF8F4}.version[data-state="ahead"] .version-value{color:var(--positive)}
 .version[data-state="unknown"] .version-value,.version[data-state="na"] .version-value{color:var(--unknown)}
+.update-detail{margin-top:.55rem;padding:.48rem .55rem;border-left:2px solid #E3B34C;background:#FFF9E9;border-radius:0 6px 6px 0;color:#7D5B00;font:10px/1.35 Roboto,sans-serif}
+.registry-meta{margin-top:.35rem;color:var(--muted);font:9px/1.35 Roboto,sans-serif}
 .tooltip{position:absolute;left:12px;right:12px;bottom:calc(100% + 8px);z-index:20;display:none;padding:.65rem .75rem;border-radius:8px;background:var(--deep);color:#fff;box-shadow:0 8px 24px rgba(13,77,94,.2);font:11px/1.45 Roboto,sans-serif}
 .tooltip:after{content:"";position:absolute;bottom:-6px;left:28px;border-width:6px 6px 0;border-style:solid;border-color:var(--deep) transparent transparent}
 .tool-card:hover .tooltip,.tool-card:focus-visible .tooltip{display:block}
-.edges{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:visible}
-.edge{fill:none;stroke:var(--unknown);stroke-width:1.7;opacity:.28;transition:opacity .15s ease,stroke-width .15s ease}
-.edge[data-state="active"]{stroke:var(--positive)}.edge[data-state="pending"]{stroke:var(--warning)}.edge[data-state="offline"]{stroke:var(--negative)}
-.edge.is-highlighted{opacity:.88;stroke-width:2.5}
 .empty{padding:2rem;text-align:center;color:var(--muted);font:12px Roboto,sans-serif}
 .footer{position:relative;overflow:hidden;margin-top:2rem;background:var(--deep);color:rgba(255,255,255,.72)}
 .footer-inner{max-width:1440px;margin:auto;padding:1rem 1.8rem;display:flex;justify-content:space-between;gap:1rem;font:10px/1.4 Roboto,sans-serif}
 .footer-graphic{position:absolute;right:-18px;top:50%;width:min(190px,38vw);transform:translateY(-50%);opacity:.8}
 @media(max-width:1050px){.tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:760px){.header-inner,.shell,.footer-inner{padding-left:1rem;padding-right:1rem}.logo{height:32px}.subtitle,.live-source{display:none}.hero{grid-template-columns:1fr}.canonical{min-width:0}.tool-grid,.group[data-group="platform"] .tool-grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.edges{display:none}.tool-card{min-height:150px}.tooltip{position:static;display:block;margin-top:.55rem;background:transparent;color:var(--muted);box-shadow:none;padding:0}.tooltip:after{display:none}.footer-inner{flex-direction:column}}
+@media(max-width:760px){.header-inner,.shell,.footer-inner{padding-left:1rem;padding-right:1rem}.logo{height:32px}.subtitle,.live-source{display:none}.hero{grid-template-columns:1fr}.canonical{min-width:0}.tool-grid,.group[data-group="platform"] .tool-grid{grid-template-columns:1fr}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.tool-card{min-height:150px}.tooltip{position:static;display:block;margin-top:.55rem;background:transparent;color:var(--muted);box-shadow:none;padding:0}.tooltip:after{display:none}.footer-inner{flex-direction:column}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
@@ -135,6 +139,7 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
       <div class="canonical-row"><span>Foundation</span><strong id="canonicalFoundation">—</strong></div>
       <div class="canonical-row"><span>Design System</span><strong id="canonicalDesign">—</strong></div>
       <div class="canonical-row"><span>Shared Data</span><strong id="canonicalShared">—</strong></div>
+      <div class="registry-meta">Auto-sync · DNS Core Tool Registry</div>
     </aside>
   </section>
 
@@ -163,7 +168,6 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
   </div>
 
   <section class="graph-wrap" id="graphWrap">
-    <svg class="edges" id="edges" aria-hidden="true"></svg>
     <div class="graph" id="graph"></div>
   </section>
 </main>
@@ -215,7 +219,7 @@ const copy={
     lifecycle:{production:'Production',beta:'Beta',development:'Development',planned:'Planned',maintenance:'Maintenance',legacy:'Legacy'},
     health:{active:'Active',pending:'Pending',offline:'Offline',na:'N/A'},
     version:{app:'APP',foundation:'F',designSystem:'DS',sharedData:'SD'},
-    current:'aktuell',to:'→'
+    current:'aktuell',to:'→',dependsOn:'Abhängigkeiten',noDependencies:'keine',updatePrefix:'Aktualisieren:',lastCheck:'Registry-Prüfung'
   },
   it:{
     subtitle:'SYSTEM MAP & TOOL STATUS',
@@ -231,7 +235,7 @@ const copy={
     lifecycle:{production:'Production',beta:'Beta',development:'Development',planned:'Planned',maintenance:'Maintenance',legacy:'Legacy'},
     health:{active:'Attivo',pending:'In attesa',offline:'Offline',na:'N/A'},
     version:{app:'APP',foundation:'F',designSystem:'DS',sharedData:'SD'},
-    current:'attuale',to:'→'
+    current:'attuale',to:'→',dependsOn:'Dipendenze',noDependencies:'nessuna',updatePrefix:'Aggiornare:',lastCheck:'Verifica registry'
   }
 };
 
@@ -348,6 +352,19 @@ function versionBlock(key,label,tool){
   const suffix=state==='update-available'&&latest?(' '+copy[lang].to+' '+latest):'';
   return '<div class="version" data-state="'+state+'" title="'+label+' '+value+(latest?' · '+copy[lang].current+' '+latest:'')+'"><span class="version-key">'+label+'</span><span class="version-value">'+value+suffix+'</span></div>';
 }
+function dependencyStrip(tool){
+  const deps=(tool.dependencies||[]).map(id=>tools.find(t=>t.id===id)?.shortLabel||tools.find(t=>t.id===id)?.label||id);
+  if(!deps.length)return '<div class="dependencies"><span class="dependency none">'+copy[lang].noDependencies+'</span></div>';
+  return '<div class="dependencies" aria-label="'+copy[lang].dependsOn+'">'+deps.map(dep=>'<span class="dependency">'+dep+'</span>').join('')+'</div>';
+}
+function updateDetail(tool){
+  const versions=tool.versions||{};
+  const labels=[];
+  if(versions.state?.foundation==='update-available')labels.push('Foundation '+(versions.foundation||'—')+' '+copy[lang].to+' '+(canonical?.foundation?.version||'—'));
+  if(versions.state?.designSystem==='update-available')labels.push('Design '+(versions.designSystem||'—')+' '+copy[lang].to+' '+(canonical?.designSystem?.version||'—'));
+  if(versions.state?.sharedData==='update-available')labels.push('Shared Data '+(versions.sharedData||'—')+' '+copy[lang].to+' '+(canonical?.sharedData?.version||'—'));
+  return labels.length?'<div class="update-detail"><strong>'+copy[lang].updatePrefix+'</strong> '+labels.join(' · ')+'</div>':'';
+}
 function card(tool){
   const health=tool.health?.connectivity||'pending';
   const description=tool.description?.[lang]||tool.description?.de||'';
@@ -355,6 +372,8 @@ function card(tool){
   const body='<div class="tool-top"><div class="tool-name">'+tool.label+'</div><div class="badges"><span class="badge lifecycle-'+tool.lifecycle+'">'+lifecycleLabel(tool.lifecycle)+'</span>'+(update?'<span class="badge update">UPDATE</span>':'')+'</div></div>'+
     '<div class="health" data-state="'+health+'"><span class="health-dot"></span><span>'+stateLabel(health)+'</span></div>'+
     '<div class="backend">'+(tool.backend?.label||'—')+'</div>'+
+    dependencyStrip(tool)+
+    updateDetail(tool)+
     '<div class="versions">'+
       versionBlock('app',copy[lang].version.app,tool)+
       versionBlock('foundation',copy[lang].version.foundation,tool)+
@@ -385,12 +404,15 @@ function render(){
   document.getElementById('metricUpdates').textContent=updates;
   document.getElementById('metricOffline').textContent=visible.filter(t=>t.health?.connectivity==='offline').length;
   const alert=document.getElementById('updateAlert');
-  alert.textContent=updates===1?c.updateOne:c.updateMany(updates);
+  const updateTools=visible.filter(t=>t.versions?.updateRequired);
+  alert.textContent=updates===0?'':((updates===1?c.updateOne:c.updateMany(updates))+' '+updateTools.map(t=>t.shortLabel||t.label).join(' · '));
   alert.classList.toggle('is-visible',updates>0);
   const source=document.getElementById('registrySource');
   source.classList.toggle('is-live',sourceLive);
   source.querySelector('span:last-child').textContent=sourceLive?c.registryLive:c.registryFallback;
-  document.getElementById('footerStatus').textContent=(sourceLive?c.registryLive:c.registryFallback)+' · '+new Date().toLocaleString(lang==='de'?'de-DE':'it-IT',{dateStyle:'short',timeStyle:'short'});
+  const checkedAt=tools.map(t=>t.health?.checkedAt).filter(Boolean).sort().at(-1);
+  const checkedLabel=checkedAt?new Date(checkedAt).toLocaleString(lang==='de'?'de-DE':'it-IT',{dateStyle:'short',timeStyle:'short'}):new Date().toLocaleString(lang==='de'?'de-DE':'it-IT',{dateStyle:'short',timeStyle:'short'});
+  document.getElementById('footerStatus').textContent=(sourceLive?c.registryLive:c.registryFallback)+' · '+c.lastCheck+' '+checkedLabel;
   const groups=['platform','operations','communication','portal','legacy'];
   const graph=document.getElementById('graph');
   graph.innerHTML=groups.map(group=>{
@@ -399,7 +421,6 @@ function render(){
     return '<section class="group" data-group="'+group+'"><div class="group-head"><h2>'+c.groups[group]+'</h2></div><div class="tool-grid">'+rows.map(card).join('')+'</div></section>';
   }).join('');
   applyFilter();
-  requestAnimationFrame(drawEdges);
   bindCards();
 }
 function applyFilter(){
@@ -412,56 +433,21 @@ document.querySelectorAll('[data-filter]').forEach(btn=>btn.addEventListener('cl
   activeFilter=btn.dataset.filter;
   document.querySelectorAll('[data-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b===btn)));
   applyFilter();
-  drawEdges();
 }));
 
-function drawEdges(){
-  const wrap=document.getElementById('graphWrap');
-  const svg=document.getElementById('edges');
-  const rect=wrap.getBoundingClientRect();
-  svg.setAttribute('viewBox','0 0 '+rect.width+' '+rect.height);
-  svg.setAttribute('width',rect.width);
-  svg.setAttribute('height',rect.height);
-  svg.innerHTML='';
-  for(const tool of tools){
-    const target=document.querySelector('[data-tool-id="'+tool.id+'"]');
-    if(!target||target.classList.contains('is-dimmed'))continue;
-    for(const dependency of tool.dependencies||[]){
-      const source=document.querySelector('[data-tool-id="'+dependency+'"]');
-      if(!source||source.classList.contains('is-dimmed'))continue;
-      const a=source.getBoundingClientRect(),b=target.getBoundingClientRect();
-      const x1=a.left+a.width/2-rect.left,y1=a.bottom-rect.top;
-      const x2=b.left+b.width/2-rect.left,y2=b.top-rect.top;
-      const mid=(y1+y2)/2;
-      const path=document.createElementNS('http://www.w3.org/2000/svg','path');
-      path.setAttribute('d','M '+x1+' '+y1+' C '+x1+' '+mid+', '+x2+' '+mid+', '+x2+' '+y2);
-      path.setAttribute('class','edge');
-      path.dataset.source=dependency;
-      path.dataset.target=tool.id;
-      path.dataset.state=tool.health?.connectivity||'pending';
-      svg.appendChild(path);
-    }
-  }
-}
 function bindCards(){
   document.querySelectorAll('.tool-card').forEach(el=>{
-    const id=el.dataset.toolId;
-    const toggle=on=>{
-      el.classList.toggle('is-focus',on);
-      document.querySelectorAll('.edge').forEach(edge=>{
-        edge.classList.toggle('is-highlighted',on&&(edge.dataset.target===id||edge.dataset.source===id));
-      });
-    };
-    el.addEventListener('mouseenter',()=>toggle(true));
-    el.addEventListener('mouseleave',()=>toggle(false));
-    el.addEventListener('focus',()=>toggle(true));
-    el.addEventListener('blur',()=>toggle(false));
+    el.addEventListener('mouseenter',()=>el.classList.add('is-focus'));
+    el.addEventListener('mouseleave',()=>el.classList.remove('is-focus'));
+    el.addEventListener('focus',()=>el.classList.add('is-focus'));
+    el.addEventListener('blur',()=>el.classList.remove('is-focus'));
   });
 }
-addEventListener('resize',()=>requestAnimationFrame(drawEdges),{passive:true});
 
 setLang(lang);
 loadRegistry();
+setInterval(()=>loadRegistry(),5*60*1000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')loadRegistry();});
 </script>
 </body>
 </html>
