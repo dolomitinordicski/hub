@@ -137,6 +137,14 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 @media(max-width:680px){.header-inner,.shell,.footer-inner{padding-left:1rem;padding-right:1rem}.logo{height:32px}.subtitle,.live-source{display:none}.hero{grid-template-columns:1fr}.canonical{min-width:0}.summary{grid-template-columns:repeat(2,minmax(0,1fr))}.tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.control-plane,.backbone{grid-template-columns:1fr}.backbone-meta{justify-content:flex-start}.detail-panel.is-visible{grid-template-columns:1fr}.technical-registry summary{align-items:flex-start;flex-direction:column}.footer-inner{flex-direction:column}}
 @media(max-width:430px){.tool-grid{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.observation-status{font-size:10px;margin-top:.4rem;color:var(--mid)}
+.observation-status[data-quality="stale"],.observation-status[data-quality="legacy"]{color:#9a5b00}
+.observation-status[data-quality="verified"]{color:var(--positive)}
+.observation-status[data-quality="unavailable"]{color:#68737d}
+.observation-details{font-size:10px;max-width:440px;overflow-wrap:anywhere}
+.observation-details div{margin:.4rem 0}.observation-details dt{font-weight:600}.observation-details dd{margin:0}
+.tool-card .observation-details{display:none}
 </style>
 </head>
 <body>
@@ -258,8 +266,10 @@ h1{margin:.45rem 0 .55rem;font-size:30px;line-height:1.12;font-weight:600;letter
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js';
-import { collection, getDocs, getFirestore } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
+import { collection, onSnapshot, getFirestore } from 'https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js';
 import { DNS_DESIGN_SYSTEM } from 'https://dolomitinordicski.github.io/dns-shared-data/web-runtime/design-system.js';
+
+import { observationMarkup } from './registry-view.mjs';
 
 const root=document.documentElement;
 root.style.setProperty('--deep',DNS_DESIGN_SYSTEM.colors.deep);
@@ -315,7 +325,7 @@ const copy={
   }
 };
 
-const fallbackCanonical={foundation:{version:'1.2.1'},designSystem:{version:'1.25.0'},sharedData:{version:'1.2.1'}};
+const fallbackCanonical={foundation:{version:null},designSystem:{version:null},sharedData:{version:null}};
 const fallback=[
   ['dns-core','DNS Core',null,'production','platform','dns-core',[],0],
   ['shared-data','DNS Shared Data','https://dolomitinordicski.github.io/dns-shared-data/','production','platform','dns-core',['dns-core'],1],
@@ -326,38 +336,12 @@ const fallback=[
   ['faktura','DNS Faktura','https://dolomitinordicski.github.io/DNS-Faktura/','production','operations','dns-core',['dns-core','shared-data','data-entry','fair'],13],
   ['polls','DNS Polls','https://dolomitinordicski.github.io/DNS-Polls-tool/','production','operations','polls-private',['shared-data'],14],
   ['flyer-studio','DNS Flyer Studio','https://dolomitinordicski.github.io/DNS-Flyer-Studio/','development','communication','dns-core',['dns-core','shared-data'],20],
-  ['qr','DNS QR Code Generator','https://dolomitinordicski.github.io/qrcodegen/','maintenance','communication','none',[],21],
-  ['strategy','DNS Strategy','https://dolomitinordicski.github.io/strategy/','development','communication','none',[],22],
-  ['ar360','DNS 360 AR Tool','https://dolomitinordicski.github.io/360ARtool/','maintenance','communication','none',[],23],
-  ['portal-v2','DNS Partner Portal Hub v2','https://dolomitinordicski.github.io/DNS-Partner-Portal-Hub-v2/','development','portal','dns-core',['dns-core','shared-data'],30],
-  ['smartslopes','Smart Slopes','https://dolomitinordicski.github.io/smartslopes/','maintenance','legacy','none',[],40],
-  ['partnerportal','Partner Portal','https://dolomitinordicski.github.io/partnerportal/','legacy','legacy','none',[],41]
+  ['partner-hub','DNS Partner Hub','https://dolomitinordicski.github.io/dns-partner-hub/','development','portal','dns-core',['dns-core','shared-data'],30]
 ].map(([id,label,url,lifecycle,group,backend,dependencies,order])=>({
   id,label,shortLabel:label,url,lifecycle,group,backend:{kind:backend,label:backend==='none'?'No Firebase':backend},
   dependencies,order,visible:true,
   description:{de:'DNS Tool',it:'Tool DNS'},
-  versions:{
-    app:({
-      'shared-data':'1.2.1',
-      'hub':'1.2.0',
-      'data-entry':'0.1.1',
-      'analytics':'3.0.1',
-      'fair':'2.0.1',
-      'faktura':'0.1.1',
-      'polls':'0.1.1',
-      'flyer-studio':'0.0.0'
-    })[id]??null,
-    foundation:['data-entry','analytics','fair','faktura','polls'].includes(id)?'1.2.1':id==='flyer-studio'?'1.2.0':id==='hub'||id==='shared-data'?'1.2.1':null,
-    designSystem:['data-entry','analytics','fair','faktura','polls','flyer-studio','hub','shared-data'].includes(id)?'1.25.0':null,
-    sharedData:['data-entry','analytics','fair','faktura','polls'].includes(id)?'1.2.1':id==='flyer-studio'?'1.2.0':id==='hub'||id==='shared-data'?'1.2.1':null,
-    canonical:fallbackCanonical,
-    state:{
-      foundation:['data-entry','analytics','fair','faktura','polls','hub','shared-data'].includes(id)?'up-to-date':id==='flyer-studio'?'update-available':'unknown',
-      designSystem:['data-entry','analytics','fair','faktura','polls','flyer-studio','hub','shared-data'].includes(id)?'up-to-date':'unknown',
-      sharedData:['data-entry','analytics','fair','faktura','polls','hub','shared-data'].includes(id)?'up-to-date':id==='flyer-studio'?'update-available':'unknown'
-    },
-    updateRequired:id==='flyer-studio'
-  },
+  versions:{app:null,foundation:null,designSystem:null,sharedData:null,canonical:fallbackCanonical,state:{foundation:'unknown',designSystem:'unknown',sharedData:'unknown'},updateRequired:false},
   health:{connectivity:backend==='none'?'na':backend==='dns-core'?'pending':'pending',web:{state:'pending'},firebase:{state:backend==='none'?'na':'pending'}}
 }));
 
@@ -384,23 +368,21 @@ function firestoreDocToObject(doc){
   return Object.fromEntries(Object.entries(doc.fields||{}).map(([k,v])=>[k,decodeValue(v)]));
 }
 
-async function loadRegistry(){
-  try{
-    const snapshot=await getDocs(collection(db,'toolRegistryPublic'));
+let unsubscribeRegistry=null;
+function loadRegistry(){
+  if(unsubscribeRegistry)return;
+  unsubscribeRegistry=onSnapshot(collection(db,'toolRegistryPublic'),snapshot=>{
     const rows=snapshot.docs.map(firestoreDocToObject);
     const meta=rows.find(row=>row.id==='_meta');
-    const visible=rows.filter(row=>row.id!=='_meta'&&row.visible!==false);
-    if(!visible.length)throw new Error('EMPTY_REGISTRY');
-    tools=visible;
-    canonical=meta?.canonical||visible[0]?.versions?.canonical||fallbackCanonical;
-    sourceLive=true;
-  }catch(error){
-    console.warn('DNS Hub registry fallback',error);
-    tools=fallback;
-    canonical=fallbackCanonical;
-    sourceLive=false;
-  }
-  render();
+    const visible=rows.filter(row=>row.id!=='_meta'&&row.visible!==false&&(!row.recordType||row.recordType==='tool'));
+    if(visible.length){tools=visible;canonical=meta?.canonical||visible[0]?.versions?.canonical||fallbackCanonical;sourceLive=!snapshot.metadata.fromCache;}
+    else{if(!tools.length)tools=fallback;sourceLive=false;}
+    render();
+  },error=>{
+    console.warn('DNS Hub registry unavailable',error.code);
+    if(!tools.length)tools=fallback;
+    sourceLive=false;unsubscribeRegistry=null;render();
+  });
 }
 
 function setLang(next){
@@ -437,6 +419,7 @@ function card(tool){
   const update=tool.versions?.updateRequired;
   const body='<div class="tool-top"><div class="tool-name">'+tool.label+'</div><div class="badges"><span class="badge lifecycle-'+tool.lifecycle+'">'+lifecycleLabel(tool.lifecycle)+'</span>'+(update?'<span class="badge update">UPDATE</span>':'')+'</div></div>'+
     '<div class="app-version">v'+(tool.versions?.app||'—')+'</div>'+
+    observationMarkup(tool,lang,sourceLive,Date.now(),true)+
     '<div class="compact-status">'+
       compactState('WEB',web)+
       compactState('FIREBASE',firebase)+
@@ -465,7 +448,7 @@ function registryRow(tool){
     '<td>'+tableState(web)+'</td>'+
     '<td>'+tableState(firebase)+'</td>'+
     '<td>'+lifecycleLabel(tool.lifecycle)+'</td>'+
-    '<td>'+(v.updateRequired?'<span class="badge update">UPDATE</span>':'—')+'</td>'+
+    '<td>'+(v.updateRequired?'<span class="badge update">UPDATE</span>':'—')+observationMarkup(tool,lang,sourceLive)+'</td>'+
   '</tr>';
 }
 function matchesFilter(tool){
@@ -535,8 +518,8 @@ function render(){
   const source=document.getElementById('registrySource');
   source.classList.toggle('is-live',sourceLive);
   source.querySelector('span:last-child').textContent=sourceLive?c.registryLive:c.registryFallback;
-  const checkedAt=tools.map(t=>t.health?.checkedAt).filter(Boolean).sort().at(-1);
-  const checkedLabel=checkedAt?new Date(checkedAt).toLocaleString(lang==='de'?'de-DE':'it-IT',{dateStyle:'short',timeStyle:'short'}):new Date().toLocaleString(lang==='de'?'de-DE':'it-IT',{dateStyle:'short',timeStyle:'short'});
+  const checkedAt=tools.map(t=>t.lastObservedAt||t.health?.checkedAt).filter(Boolean).sort().at(-1);
+  const checkedLabel=checkedAt?new Date(checkedAt).toLocaleString(lang==='de'?'de-DE':'it-IT',{dateStyle:'short',timeStyle:'short'}):'—';
   document.getElementById('footerStatus').textContent=(sourceLive?c.registryLive:c.registryFallback)+' · '+c.lastCheck+' '+checkedLabel;
 
   infrastructureMarkup();
@@ -614,7 +597,7 @@ function bindRelations(){
 
 setLang(lang);
 loadRegistry();
-setInterval(()=>loadRegistry(),5*60*1000);
+setInterval(()=>render(),60*1000);
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')loadRegistry();});
 </script>
 </body>

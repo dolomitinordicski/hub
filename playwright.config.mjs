@@ -1,0 +1,1 @@
+export default {testDir:'tests',testMatch:'browser.spec.mjs',workers:1,use:{baseURL:'http://127.0.0.1:8741'},webServer:{command:'python3 -m http.server 8741 --bind 127.0.0.1',url:'http://127.0.0.1:8741',reuseExistingServer:!process.env.CI}};

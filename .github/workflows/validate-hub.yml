@@ -5,11 +5,17 @@ on:
     branches: [main]
     paths:
       - 'index.html'
+      - 'registry-view.mjs'
+      - 'tests/**'
+      - 'playwright.config.mjs'
       - '.github/workflows/validate-hub.yml'
   push:
     branches: [main]
     paths:
       - 'index.html'
+      - 'registry-view.mjs'
+      - 'tests/**'
+      - 'playwright.config.mjs'
       - '.github/workflows/validate-hub.yml'
   workflow_dispatch:
 
@@ -18,7 +24,7 @@ permissions:
 
 jobs:
   validate:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -36,8 +42,17 @@ jobs:
               raise SystemExit("Missing module script")
           Path("/tmp/hub.mjs").write_text(match.group(1))
 
+      - name: Test version evidence, freshness and failed deployments
+        run: node --test tests/registry-view.test.mjs
+
       - name: Validate JavaScript syntax
         run: node --check /tmp/hub.mjs
+
+      - name: Install isolated browser test runner
+        run: npm install --no-save --package-lock=false @playwright/test@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - name: Browser fixtures (no production connections)
+        run: npx playwright test
 
       - name: Validate Hub contracts
         shell: bash
