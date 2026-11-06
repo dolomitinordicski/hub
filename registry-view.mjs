@@ -7,6 +7,7 @@ export const escapeHtml = (value) =>
       ],
   );
 export function registryQuality(tool, live, now = Date.now()) {
+  if (tool.observations?.quality === "service") return "service";
   const time = Date.parse(
     tool.lastObservedAt ??
       tool.observations?.observedAt ??
@@ -41,12 +42,14 @@ export function observationMarkup(
           stale: "Dati non aggiornati",
           unavailable: "Informazioni non disponibili",
           legacy: "Dati legacy non verificati",
+          service: "Servizio: versioni app non applicabili",
         }
       : {
           verified: "Nachweise geprüft",
           stale: "Veraltete Daten",
           unavailable: "Informationen fehlen",
           legacy: "Ungeprüfte Altdaten",
+          service: "Dienst: App-Versionen nicht anwendbar",
         };
   const pairs = [
     [it ? "Qualità dati" : "Datenqualität", labels[quality]],

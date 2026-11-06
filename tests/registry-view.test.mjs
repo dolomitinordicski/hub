@@ -2,6 +2,11 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { registryQuality, observationMarkup } from "../registry-view.mjs";
 const now = Date.parse("2026-11-06T22:00:00Z");
+test('service versions are explicitly not applicable',()=>{
+  const service={observations:{quality:'service'}};
+  assert.equal(registryQuality(service,true,now),'service');
+  assert.match(observationMarkup(service,'it',true,now),/versioni app non applicabili/);
+});
 const tool = {
   lastObservedAt: "2026-11-06T21:50:00Z",
   observations: {
